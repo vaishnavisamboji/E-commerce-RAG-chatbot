@@ -783,6 +783,6 @@ with tab5:
     st.markdown("""
     <p style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #333333;
               letter-spacing: 0.08em; margin-top: 16px;">
-        Built with Microsoft Power BI. Data sourced from AWS S3.
+        Data sourced from AWS S3.
     </p>
     """, unsafe_allow_html=True)
