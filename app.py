@@ -382,6 +382,38 @@ with tab1:
     </p>
     """, unsafe_allow_html=True)
 
+    # Initialize session state for sample question
+    if 'sample_question' not in st.session_state:
+        st.session_state.sample_question = None
+
+    # Sample questions row
+    st.markdown("""
+    <p style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #444444;
+              letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px;">
+        Try asking:
+    </p>
+    """, unsafe_allow_html=True)
+
+    sample_qs = [
+        "What is total revenue?",
+        "Show top 5 product categories",
+        "How many orders were delivered late?",
+        "Average delivery time",
+        "List customers by state",
+        "What is the average review score?"
+    ]
+
+    # Create columns for buttons (adjust number per row as needed)
+    cols = st.columns(len(sample_qs))
+    for i, q in enumerate(sample_qs):
+        with cols[i]:
+            if st.button(q, key=f"sample_{i}"):
+                st.session_state.sample_question = q
+                st.rerun()
+
+    st.markdown("<hr style='margin: 20px 0; border-color: #1a1a1a;'>", unsafe_allow_html=True)
+
+    # Message history
     if 'messages' not in st.session_state:
         st.session_state.messages = []
 
@@ -389,7 +421,15 @@ with tab1:
         with st.chat_message(msg['role']):
             st.markdown(msg['content'])
 
-    if prompt := st.chat_input("Ask a question about your data..."):
+    # Chat input
+    prompt = st.chat_input("Ask a question about your data...")
+
+    # If a sample question was clicked, use it as prompt
+    if st.session_state.sample_question:
+        prompt = st.session_state.sample_question
+        st.session_state.sample_question = None  # clear after use
+
+    if prompt:
         st.session_state.messages.append({'role': 'user', 'content': prompt})
         with st.chat_message('user'):
             st.markdown(prompt)
@@ -398,12 +438,12 @@ with tab1:
                 response = ask(prompt)
             st.markdown(response)
         st.session_state.messages.append({'role': 'assistant', 'content': response})
+        st.rerun()
 
     if st.session_state.messages:
         if st.button('Clear conversation'):
             st.session_state.messages = []
             st.rerun()
-
 # =============================================================================
 # TAB 2 — DATASET
 # =============================================================================
