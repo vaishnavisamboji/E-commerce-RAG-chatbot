@@ -399,7 +399,6 @@ with tab1:
         "Show top 5 product categories",
         "How many orders were delivered late?",
         "Average delivery time",
-        "List customers by state",
         "What is the average review score?"
     ]
 
