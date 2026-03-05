@@ -499,88 +499,89 @@ with tab2:
 # TAB 3 — MODEL
 # =============================================================================
 with tab3:
-    st.markdown("""
-    <p style="color: #444444; font-size: 13px; font-family: 'IBM Plex Mono', monospace;
-              letter-spacing: 0.05em; margin-bottom: 40px;">
-        Architecture and components powering this application.
-    </p>
-    """, unsafe_allow_html=True)
+    st.markdown('<div style="color:#444; font-size:13px; font-family:IBM Plex Mono,monospace; letter-spacing:0.05em; margin-bottom:40px;">Architecture and components powering this application.</div>', unsafe_allow_html=True)
 
     col1, col2 = st.columns(2)
+
     with col1:
         st.markdown("""
-        <div style="border: 1px solid #1a1a1a; padding: 28px; margin-bottom: 16px;">
-            <p style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #444444;
-                      letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 16px;">Data Layer</p>
-            <p style="font-size: 18px; font-weight: 300; color: #ffffff; margin-bottom: 8px;">AWS S3 + RDS MySQL</p>
-            <p style="font-size: 13px; color: #555555; line-height: 1.6;">
+        <div style="border:1px solid #1a1a1a; padding:28px; margin-bottom:16px;">
+            <div style="font-family:IBM Plex Mono,monospace; font-size:10px; color:#444; letter-spacing:0.15em; text-transform:uppercase; margin-bottom:16px;">Data Layer</div>
+            <div style="font-size:18px; font-weight:300; color:#fff; margin-bottom:8px;">AWS S3 + RDS MySQL</div>
+            <div style="font-size:13px; color:#555; line-height:1.6;">
                 Raw CSVs ingested into S3 as the source of truth. Cleaned and feature-engineered
                 via Jupyter — delivery_days, is_late, total_revenue, churn_score added.
                 All 6 tables loaded into AWS RDS MySQL via SQLAlchemy. SQL analytics queries
                 generate 5 summary tables saved back into RDS for Power BI.
-            </p>
+            </div>
         </div>
-        <div style="border: 1px solid #1a1a1a; padding: 28px; margin-bottom: 16px;">
-            <p style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #444444;
-                      letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 16px;">Retrieval</p>
-            <p style="font-size: 18px; font-weight: 300; color: #ffffff; margin-bottom: 8px;">Semantic Search</p>
-            <p style="font-size: 13px; color: #555555; line-height: 1.6;">
+        """, unsafe_allow_html=True)
+
+        st.markdown("""
+        <div style="border:1px solid #1a1a1a; padding:28px; margin-bottom:16px;">
+            <div style="font-family:IBM Plex Mono,monospace; font-size:10px; color:#444; letter-spacing:0.15em; text-transform:uppercase; margin-bottom:16px;">Retrieval</div>
+            <div style="font-size:18px; font-weight:300; color:#fff; margin-bottom:8px;">Semantic Search</div>
+            <div style="font-size:13px; color:#555; line-height:1.6;">
                 HuggingFace all-MiniLM-L6-v2 embeds 438,038 documents on Kaggle T4 GPU.
                 Embeddings saved as embeddings.npy + documents.pkl and uploaded to S3.
                 Cosine similarity via numpy dot product at query time — no vector DB required.
-            </p>
+            </div>
         </div>
-        <div style="border: 1px solid #1a1a1a; padding: 28px; margin-bottom: 16px;">
-            <p style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #444444;
-                      letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 16px;">Generation</p>
-            <p style="font-size: 18px; font-weight: 300; color: #ffffff; margin-bottom: 8px;">Groq — Llama 3.1 8B</p>
-            <p style="font-size: 13px; color: #555555; line-height: 1.6;">
+        """, unsafe_allow_html=True)
+
+        st.markdown("""
+        <div style="border:1px solid #1a1a1a; padding:28px; margin-bottom:16px;">
+            <div style="font-family:IBM Plex Mono,monospace; font-size:10px; color:#444; letter-spacing:0.15em; text-transform:uppercase; margin-bottom:16px;">Generation</div>
+            <div style="font-size:18px; font-weight:300; color:#fff; margin-bottom:8px;">Groq — Llama 3.1 8B</div>
+            <div style="font-size:13px; color:#555; line-height:1.6;">
                 Free tier. Sub-second inference via Groq LPU hardware.
                 Temperature 0 for deterministic, factual answers.
                 Used across all 3 routes — lookup formatting, pandas result formatting, and RAG generation.
-            </p>
+            </div>
         </div>
         """, unsafe_allow_html=True)
 
     with col2:
         st.markdown("""
-        <div style="border: 1px solid #1a1a1a; padding: 28px; margin-bottom: 16px;">
-            <p style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #444444;
-                      letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 16px;">Business Intelligence</p>
-            <p style="font-size: 18px; font-weight: 300; color: #ffffff; margin-bottom: 8px;">Power BI via MySQL Connector</p>
-            <p style="font-size: 13px; color: #555555; line-height: 1.6;">
+        <div style="border:1px solid #1a1a1a; padding:28px; margin-bottom:16px;">
+            <div style="font-family:IBM Plex Mono,monospace; font-size:10px; color:#444; letter-spacing:0.15em; text-transform:uppercase; margin-bottom:16px;">Business Intelligence</div>
+            <div style="font-size:18px; font-weight:300; color:#fff; margin-bottom:8px;">Power BI via MySQL Connector</div>
+            <div style="font-size:13px; color:#555; line-height:1.6;">
                 Power BI connects directly to RDS MySQL via the MySQL connector.
                 Pulls from 5 pre-computed analytics tables — monthly revenue, customer segments,
                 delivery performance, payment breakdown, and product categories.
-            </p>
-        </div>
-        <div style="border: 1px solid #1a1a1a; padding: 28px; margin-bottom: 16px;">
-            <p style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #444444;
-                      letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 16px;">Query Router</p>
-            <p style="font-size: 18px; font-weight: 300; color: #ffffff; margin-bottom: 8px;">3-Way Routing</p>
-            <p style="font-size: 13px; color: #555555; line-height: 1.6;">
-                Exact alphanumeric ID detected via regex — bypasses embeddings, scans dataframes directly.
-                Aggregate questions (counts, totals, trends) routed to pandas code generation.
-                All other questions use RAG retrieval.
-            </p>
-        </div>
-        <div style="border: 1px solid #1a1a1a; padding: 28px; margin-bottom: 16px;">
-            <p style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #444444;
-                      letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 16px;">Code Generation</p>
-            <p style="font-size: 18px; font-weight: 300; color: #ffffff; margin-bottom: 8px;">Text-to-Pandas</p>
-            <p style="font-size: 13px; color: #555555; line-height: 1.6;">
-                LLM receives full schema — column names, dtypes, sample values, join relationships,
-                and example patterns. Generates pandas code, executes against real dataframes.
-                Auto-retries with the error message included if execution fails.
-            </p>
+            </div>
         </div>
         """, unsafe_allow_html=True)
 
-    # Pipeline flow — all in ONE markdown call, no nested strings
+        st.markdown("""
+        <div style="border:1px solid #1a1a1a; padding:28px; margin-bottom:16px;">
+            <div style="font-family:IBM Plex Mono,monospace; font-size:10px; color:#444; letter-spacing:0.15em; text-transform:uppercase; margin-bottom:16px;">Query Router</div>
+            <div style="font-size:18px; font-weight:300; color:#fff; margin-bottom:8px;">3-Way Routing</div>
+            <div style="font-size:13px; color:#555; line-height:1.6;">
+                Exact alphanumeric ID detected via regex — bypasses embeddings, scans dataframes directly.
+                Aggregate questions (counts, totals, trends) routed to pandas code generation.
+                All other questions use RAG retrieval.
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        st.markdown("""
+        <div style="border:1px solid #1a1a1a; padding:28px; margin-bottom:16px;">
+            <div style="font-family:IBM Plex Mono,monospace; font-size:10px; color:#444; letter-spacing:0.15em; text-transform:uppercase; margin-bottom:16px;">Code Generation</div>
+            <div style="font-size:18px; font-weight:300; color:#fff; margin-bottom:8px;">Text-to-Pandas</div>
+            <div style="font-size:13px; color:#555; line-height:1.6;">
+                LLM receives full schema — column names, dtypes, sample values, join relationships,
+                and example patterns. Generates pandas code, executes against real dataframes.
+                Auto-retries with the error message included if execution fails.
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    # Pipeline flow
+    st.markdown('<div style="font-family:IBM Plex Mono,monospace; font-size:10px; color:#444; letter-spacing:0.15em; text-transform:uppercase; margin:8px 0 16px 0;">Full pipeline</div>', unsafe_allow_html=True)
     st.markdown("""
-    <p style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #444444;
-              letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 16px; margin-top: 8px;">Full pipeline</p>
-    <div style="border: 1px solid #1a1a1a; padding: 28px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #666666; line-height: 2.8;">
+    <div style="border:1px solid #1a1a1a; padding:28px; font-family:IBM Plex Mono,monospace; font-size:12px; line-height:2.8;">
         <div>
             <span style="color:#555">Raw CSVs</span>
             <span style="color:#333"> &#8594; </span>
@@ -608,19 +609,19 @@ with tab3:
             <span style="color:#333"> &#8594; </span>
             <span style="color:#aaa">S3</span>
         </div>
-        <div style="margin-top: 12px; border-top: 1px solid #1a1a1a; padding-top: 12px;">
+        <div style="margin-top:12px; border-top:1px solid #1a1a1a; padding-top:12px;">
             <span style="color:#555">Question</span>
             <span style="color:#333"> &#8594; </span>
             <span style="color:#666">ID detected?</span>
             <span style="color:#333"> &#8594; </span>
             <span style="color:#aaa">Direct dataframe scan &#8594; LLM format</span>
         </div>
-        <div style="padding-left: 120px;">
+        <div style="padding-left:120px;">
             <span style="color:#666">Aggregate?</span>
             <span style="color:#333"> &#8594; </span>
             <span style="color:#aaa">Codegen &#8594; exec &#8594; auto-retry &#8594; LLM format</span>
         </div>
-        <div style="padding-left: 120px;">
+        <div style="padding-left:120px;">
             <span style="color:#666">Else</span>
             <span style="color:#333"> &#8594; </span>
             <span style="color:#aaa">Embed query &#8594; cosine similarity &#8594; top 10 docs &#8594; LLM generate</span>
@@ -628,11 +629,8 @@ with tab3:
     </div>
     """, unsafe_allow_html=True)
 
-    st.markdown('<div style="height: 24px;"></div>', unsafe_allow_html=True)
-    st.markdown("""
-    <p style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #444444;
-              letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 16px;">Loaded data</p>
-    """, unsafe_allow_html=True)
+    st.markdown('<div style="height:24px;"></div>', unsafe_allow_html=True)
+    st.markdown('<div style="font-family:IBM Plex Mono,monospace; font-size:10px; color:#444; letter-spacing:0.15em; text-transform:uppercase; margin-bottom:16px;">Loaded data</div>', unsafe_allow_html=True)
     cols = st.columns(len(dfs))
     for i, (name, df) in enumerate(dfs.items()):
         cols[i].metric(name, f'{len(df):,}')
@@ -640,199 +638,89 @@ with tab3:
 # TAB 4 — ABOUT
 # =============================================================================
 with tab4:
-    st.markdown("""
-    <p style="color: #444444; font-size: 13px; font-family: 'IBM Plex Mono', monospace;
-              letter-spacing: 0.05em; margin-bottom: 40px;">
-        What this is, why it matters, and where it goes next.
-    </p>
-    """, unsafe_allow_html=True)
+    st.markdown('<div style="color:#444; font-size:13px; font-family:IBM Plex Mono,monospace; letter-spacing:0.05em; margin-bottom:40px;">What this is, why it matters, and where it goes next.</div>', unsafe_allow_html=True)
 
     col1, col2 = st.columns([3, 2])
+
     with col1:
 
-        # ── What this is ──────────────────────────────────────────────────────
-        st.markdown("""
-        <div style="margin-bottom: 40px;">
-            <p style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #444444;
-                      letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 16px;">What this is</p>
-            <p style="font-size: 14px; color: #cccccc; line-height: 1.8; font-weight: 300;">
-                LLM-Powered E-Commerce Analytics is a full end-to-end data project built on the
-                Olist Brazilian E-Commerce dataset — from raw ingestion and SQL analytics
-                to a Power BI dashboard and a natural language query interface backed by RAG
-                and LLM-generated pandas code.
-            </p>
-            <p style="font-size: 14px; color: #cccccc; line-height: 1.8; font-weight: 300; margin-top: 16px;">
-                The goal: eliminate the need for SQL or pandas to get answers from structured data.
-                Ask a plain English question and receive a grounded, accurate answer drawn directly
-                from 438,038 records across 6 tables.
-            </p>
-        </div>
-        """, unsafe_allow_html=True)
+        # What this is
+        st.markdown('<div style="font-family:IBM Plex Mono,monospace; font-size:10px; color:#444; letter-spacing:0.15em; text-transform:uppercase; margin-bottom:12px;">What this is</div>', unsafe_allow_html=True)
+        st.markdown('<div style="font-size:14px; color:#ccc; line-height:1.8; font-weight:300; margin-bottom:12px;">LLM-Powered E-Commerce Analytics is a full end-to-end data project built on the Olist Brazilian E-Commerce dataset — from raw ingestion and SQL analytics to a Power BI dashboard and a natural language query interface backed by RAG and LLM-generated pandas code.</div>', unsafe_allow_html=True)
+        st.markdown('<div style="font-size:14px; color:#ccc; line-height:1.8; font-weight:300; margin-bottom:40px;">The goal: eliminate the need for SQL or pandas to get answers from structured data. Ask a plain English question and receive a grounded, accurate answer drawn directly from 438,038 records across 6 tables.</div>', unsafe_allow_html=True)
 
-        # ── How it was built — all steps in ONE html block ────────────────────
-        st.markdown("""
-        <div style="margin-bottom: 40px;">
-            <p style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #444444;
-                      letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 16px;">How it was built</p>
+        # How it was built
+        st.markdown('<div style="font-family:IBM Plex Mono,monospace; font-size:10px; color:#444; letter-spacing:0.15em; text-transform:uppercase; margin-bottom:12px;">How it was built</div>', unsafe_allow_html=True)
 
-            <p style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #555555;
-                      letter-spacing: 0.12em; text-transform: uppercase; margin: 20px 0 8px 0;">1 — Data Ingestion</p>
-            <p style="font-size: 14px; color: #cccccc; line-height: 1.8; font-weight: 300;">
-                Raw Olist CSVs (orders, customers, products, reviews, payments, sellers) were uploaded
-                to an AWS S3 bucket
-                (<code style="background:transparent; color:#888; font-size:12px;">brazilian-ecommerce-vs</code>)
-                as the single source of truth for the entire project.
-            </p>
+        # Step 1
+        st.markdown('<div style="font-family:IBM Plex Mono,monospace; font-size:10px; color:#555; letter-spacing:0.12em; text-transform:uppercase; margin:20px 0 8px 0;">1 — Data Ingestion</div>', unsafe_allow_html=True)
+        st.markdown('<div style="font-size:14px; color:#ccc; line-height:1.8; font-weight:300;">Raw Olist CSVs (orders, customers, products, reviews, payments, sellers) were uploaded to an AWS S3 bucket (<code style="background:transparent; color:#888; font-size:12px;">brazilian-ecommerce-vs</code>) as the single source of truth for the entire project.</div>', unsafe_allow_html=True)
 
-            <p style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #555555;
-                      letter-spacing: 0.12em; text-transform: uppercase; margin: 20px 0 8px 0;">2 — Data Processing &amp; Feature Engineering</p>
-            <p style="font-size: 14px; color: #cccccc; line-height: 1.8; font-weight: 300;">
-                A Jupyter notebook connected to S3 via
-                <code style="background:transparent; color:#888; font-size:12px;">s3fs</code>
-                and loaded all 6 tables. Data quality checks were run across all tables —
-                null counts, duplicate detection, and referential integrity checks
-                (orders without customers, orders without payments, orders without reviews).
-            </p>
-            <p style="font-size: 14px; color: #cccccc; line-height: 1.8; font-weight: 300; margin-top: 12px;">
-                Cleaning steps included: converting all date columns to datetime, filling missing delivery
-                dates with estimated dates, filling null review titles and messages, and imputing missing
-                product dimensions with column medians. Feature engineering added
-                <code style="background:transparent; color:#888; font-size:12px;">delivery_days</code>,
-                <code style="background:transparent; color:#888; font-size:12px;">is_late</code>,
-                <code style="background:transparent; color:#888; font-size:12px;">total_revenue</code>
-                per order, and a customer-level
-                <code style="background:transparent; color:#888; font-size:12px;">churn_score</code>
-                (customers with only one order flagged as likely churned).
-                Processed tables were uploaded back to S3 as cleaned CSVs.
-            </p>
+        # Step 2
+        st.markdown('<div style="font-family:IBM Plex Mono,monospace; font-size:10px; color:#555; letter-spacing:0.12em; text-transform:uppercase; margin:20px 0 8px 0;">2 — Data Processing &amp; Feature Engineering</div>', unsafe_allow_html=True)
+        st.markdown('<div style="font-size:14px; color:#ccc; line-height:1.8; font-weight:300;">A Jupyter notebook connected to S3 via <code style="background:transparent; color:#888; font-size:12px;">s3fs</code> and loaded all 6 tables. Data quality checks were run across all tables — null counts, duplicate detection, and referential integrity checks (orders without customers, orders without payments, orders without reviews).</div>', unsafe_allow_html=True)
+        st.markdown('<div style="font-size:14px; color:#ccc; line-height:1.8; font-weight:300; margin-top:10px;">Cleaning steps included: converting all date columns to datetime, filling missing delivery dates with estimated dates, filling null review titles and messages, and imputing missing product dimensions with column medians. Feature engineering added <code style="background:transparent; color:#888; font-size:12px;">delivery_days</code>, <code style="background:transparent; color:#888; font-size:12px;">is_late</code>, <code style="background:transparent; color:#888; font-size:12px;">total_revenue</code> per order, and a customer-level <code style="background:transparent; color:#888; font-size:12px;">churn_score</code> (customers with only one order flagged as likely churned). Processed tables were uploaded back to S3 as cleaned CSVs.</div>', unsafe_allow_html=True)
 
-            <p style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #555555;
-                      letter-spacing: 0.12em; text-transform: uppercase; margin: 20px 0 8px 0;">3 — AWS RDS MySQL + SQL Analytics</p>
-            <p style="font-size: 14px; color: #cccccc; line-height: 1.8; font-weight: 300;">
-                An AWS RDS MySQL instance was provisioned and all 6 cleaned tables were loaded
-                from the notebook via SQLAlchemy. SQL queries were written directly in the notebook
-                to generate 5 analytics summary tables: monthly revenue &amp; order trends,
-                customer segments by state (High / Mid / Low Value), delivery performance by state,
-                payment method breakdown, and product category analysis.
-                All summary tables were saved back into MySQL for Power BI consumption.
-            </p>
+        # Step 3
+        st.markdown('<div style="font-family:IBM Plex Mono,monospace; font-size:10px; color:#555; letter-spacing:0.12em; text-transform:uppercase; margin:20px 0 8px 0;">3 — AWS RDS MySQL + SQL Analytics</div>', unsafe_allow_html=True)
+        st.markdown('<div style="font-size:14px; color:#ccc; line-height:1.8; font-weight:300;">An AWS RDS MySQL instance was provisioned and all 6 cleaned tables were loaded from the notebook via SQLAlchemy. SQL queries were written directly in the notebook to generate 5 analytics summary tables: monthly revenue &amp; order trends, customer segments by state (High / Mid / Low Value), delivery performance by state, payment method breakdown, and product category analysis. All summary tables were saved back into MySQL for Power BI consumption.</div>', unsafe_allow_html=True)
 
-            <p style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #555555;
-                      letter-spacing: 0.12em; text-transform: uppercase; margin: 20px 0 8px 0;">4 — Power BI Dashboard</p>
-            <p style="font-size: 14px; color: #cccccc; line-height: 1.8; font-weight: 300;">
-                Power BI connected directly to RDS MySQL via the MySQL connector and queried
-                the analytics summary tables to build the business intelligence dashboard —
-                covering revenue trends, delivery performance, payment methods,
-                customer segments, and state-level breakdowns.
-            </p>
+        # Step 4
+        st.markdown('<div style="font-family:IBM Plex Mono,monospace; font-size:10px; color:#555; letter-spacing:0.12em; text-transform:uppercase; margin:20px 0 8px 0;">4 — Power BI Dashboard</div>', unsafe_allow_html=True)
+        st.markdown('<div style="font-size:14px; color:#ccc; line-height:1.8; font-weight:300;">Power BI connected directly to RDS MySQL via the MySQL connector and queried the analytics summary tables to build the business intelligence dashboard — covering revenue trends, delivery performance, payment methods, customer segments, and state-level breakdowns.</div>', unsafe_allow_html=True)
 
-            <p style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #555555;
-                      letter-spacing: 0.12em; text-transform: uppercase; margin: 20px 0 8px 0;">5 — RAG + LLM Pipeline</p>
-            <p style="font-size: 14px; color: #cccccc; line-height: 1.8; font-weight: 300;">
-                Built on a Kaggle T4 GPU notebook. All 438,038 rows were converted into LangChain
-                Documents and embedded with
-                <code style="background:transparent; color:#888; font-size:12px;">all-MiniLM-L6-v2</code>
-                on GPU. The embeddings matrix was saved as
-                <code style="background:transparent; color:#888; font-size:12px;">embeddings.npy</code>
-                and document texts as
-                <code style="background:transparent; color:#888; font-size:12px;">documents.pkl</code>,
-                then uploaded to S3. At runtime, cosine similarity is computed entirely in numpy —
-                no vector database required.
-            </p>
-            <p style="font-size: 14px; color: #cccccc; line-height: 1.8; font-weight: 300; margin-top: 12px;">
-                A 3-way query router dispatches every question to the right strategy:
-                exact alphanumeric IDs bypass embeddings and scan dataframes directly;
-                aggregate questions (counts, totals, averages, trends) route to a text-to-pandas
-                chain that generates executable code, runs it against the real dataframes, and
-                auto-retries with error context if execution fails;
-                all other questions use RAG — top 10 records retrieved by cosine similarity,
-                answered by the LLM from that context.
-            </p>
+        # Step 5
+        st.markdown('<div style="font-family:IBM Plex Mono,monospace; font-size:10px; color:#555; letter-spacing:0.12em; text-transform:uppercase; margin:20px 0 8px 0;">5 — RAG + LLM Pipeline</div>', unsafe_allow_html=True)
+        st.markdown('<div style="font-size:14px; color:#ccc; line-height:1.8; font-weight:300;">Built on a Kaggle T4 GPU notebook. All 438,038 rows were converted into LangChain Documents and embedded with <code style="background:transparent; color:#888; font-size:12px;">all-MiniLM-L6-v2</code> on GPU. The embeddings matrix was saved as <code style="background:transparent; color:#888; font-size:12px;">embeddings.npy</code> and document texts as <code style="background:transparent; color:#888; font-size:12px;">documents.pkl</code>, then uploaded to S3. At runtime, cosine similarity is computed entirely in numpy — no vector database required.</div>', unsafe_allow_html=True)
+        st.markdown('<div style="font-size:14px; color:#ccc; line-height:1.8; font-weight:300; margin-top:10px;">A 3-way query router dispatches every question to the right strategy: exact alphanumeric IDs bypass embeddings and scan dataframes directly; aggregate questions (counts, totals, averages, trends) route to a text-to-pandas chain that generates executable code, runs it against the real dataframes, and auto-retries with error context if execution fails; all other questions use RAG — top 10 records retrieved by cosine similarity, answered by the LLM from that context.</div>', unsafe_allow_html=True)
 
-            <p style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #555555;
-                      letter-spacing: 0.12em; text-transform: uppercase; margin: 20px 0 8px 0;">6 — Streamlit App, GitHub &amp; Deployment</p>
-            <p style="font-size: 14px; color: #cccccc; line-height: 1.8; font-weight: 300;">
-                The app was written and tested inside the Kaggle notebook using
-                <code style="background:transparent; color:#888; font-size:12px;">pyngrok</code>
-                to expose a live public URL. The final
-                <code style="background:transparent; color:#888; font-size:12px;">app.py</code>
-                was pushed to GitHub and deployed on Streamlit Cloud, where it downloads
-                embeddings from S3 on cold start and runs the full pipeline at zero infrastructure cost.
-            </p>
-        </div>
-        """, unsafe_allow_html=True)
+        # Step 6
+        st.markdown('<div style="font-family:IBM Plex Mono,monospace; font-size:10px; color:#555; letter-spacing:0.12em; text-transform:uppercase; margin:20px 0 8px 0;">6 — Streamlit App, GitHub &amp; Deployment</div>', unsafe_allow_html=True)
+        st.markdown('<div style="font-size:14px; color:#ccc; line-height:1.8; font-weight:300; margin-bottom:40px;">The app was written and tested inside the Kaggle notebook using <code style="background:transparent; color:#888; font-size:12px;">pyngrok</code> to expose a live public URL. The final <code style="background:transparent; color:#888; font-size:12px;">app.py</code> was pushed to GitHub and deployed on Streamlit Cloud, where it downloads embeddings from S3 on cold start and runs the full pipeline at zero infrastructure cost.</div>', unsafe_allow_html=True)
 
-        # ── Business value ────────────────────────────────────────────────────
-        st.markdown("""
-        <div style="margin-bottom: 40px;">
-            <p style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #444444;
-                      letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 16px;">Business value</p>
-            <p style="font-size: 14px; color: #cccccc; line-height: 1.8; font-weight: 300;">
-                Analysts spend significant time writing repetitive queries for stakeholders.
-                This removes that bottleneck — a product manager can query delivery performance,
-                a finance team can pull monthly revenue by state, and a support agent can look up
-                any order by ID, all without writing a single line of code.
-            </p>
-            <p style="font-size: 14px; color: #cccccc; line-height: 1.8; font-weight: 300; margin-top: 16px;">
-                The architecture is database-agnostic. Swapping the data source for a production
-                MySQL, Postgres, or Snowflake instance requires only changes to the loading layer —
-                the router, codegen chain, and RAG pipeline remain unchanged.
-            </p>
-        </div>
-        """, unsafe_allow_html=True)
+        # Business value
+        st.markdown('<div style="font-family:IBM Plex Mono,monospace; font-size:10px; color:#444; letter-spacing:0.15em; text-transform:uppercase; margin-bottom:12px;">Business value</div>', unsafe_allow_html=True)
+        st.markdown('<div style="font-size:14px; color:#ccc; line-height:1.8; font-weight:300; margin-bottom:12px;">Analysts spend significant time writing repetitive queries for stakeholders. This removes that bottleneck — a product manager can query delivery performance, a finance team can pull monthly revenue by state, and a support agent can look up any order by ID, all without writing a single line of code.</div>', unsafe_allow_html=True)
+        st.markdown('<div style="font-size:14px; color:#ccc; line-height:1.8; font-weight:300; margin-bottom:40px;">The architecture is database-agnostic. Swapping the data source for a production MySQL, Postgres, or Snowflake instance requires only changes to the loading layer — the router, codegen chain, and RAG pipeline remain unchanged.</div>', unsafe_allow_html=True)
 
     with col2:
 
-        # ── Dataset ───────────────────────────────────────────────────────────
+        # Dataset
         st.markdown("""
-        <div style="border: 1px solid #1a1a1a; padding: 28px; margin-bottom: 16px;">
-            <p style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #444444;
-                      letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 20px;">Dataset</p>
-            <div style="font-size: 13px; color: #888888; line-height: 2.2;">
-                <div style="border-bottom:1px solid #111; padding-bottom:10px; margin-bottom:10px; color:#cccccc;">
-                    Olist Brazilian E-Commerce (Kaggle)</div>
-                <div style="border-bottom:1px solid #111; padding-bottom:10px; margin-bottom:10px;">
-                    438,038 documents embedded</div>
-                <div style="border-bottom:1px solid #111; padding-bottom:10px; margin-bottom:10px;">
-                    99,441 orders &nbsp;&#183;&nbsp; 99,441 customers</div>
-                <div style="border-bottom:1px solid #111; padding-bottom:10px; margin-bottom:10px;">
-                    103,886 payments &nbsp;&#183;&nbsp; 99,224 reviews</div>
-                <div style="border-bottom:1px solid #111; padding-bottom:10px; margin-bottom:10px;">
-                    32,951 products &nbsp;&#183;&nbsp; 3,095 sellers</div>
+        <div style="border:1px solid #1a1a1a; padding:28px; margin-bottom:16px;">
+            <div style="font-family:IBM Plex Mono,monospace; font-size:10px; color:#444; letter-spacing:0.15em; text-transform:uppercase; margin-bottom:20px;">Dataset</div>
+            <div style="font-size:13px; color:#888; line-height:2.2;">
+                <div style="border-bottom:1px solid #111; padding-bottom:10px; margin-bottom:10px; color:#ccc;">Olist Brazilian E-Commerce (Kaggle)</div>
+                <div style="border-bottom:1px solid #111; padding-bottom:10px; margin-bottom:10px;">438,038 documents embedded</div>
+                <div style="border-bottom:1px solid #111; padding-bottom:10px; margin-bottom:10px;">99,441 orders &nbsp;&#183;&nbsp; 99,441 customers</div>
+                <div style="border-bottom:1px solid #111; padding-bottom:10px; margin-bottom:10px;">103,886 payments &nbsp;&#183;&nbsp; 99,224 reviews</div>
+                <div style="border-bottom:1px solid #111; padding-bottom:10px; margin-bottom:10px;">32,951 products &nbsp;&#183;&nbsp; 3,095 sellers</div>
                 <div>Stored in AWS S3 (us-west-1)</div>
             </div>
         </div>
         """, unsafe_allow_html=True)
 
-        # ── Improvements ──────────────────────────────────────────────────────
+        # Improvements
         st.markdown("""
-        <div style="border: 1px solid #1a1a1a; padding: 28px; margin-bottom: 16px;">
-            <p style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #444444;
-                      letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 20px;">Improvements</p>
-            <div style="font-size: 13px; color: #888888; line-height: 2.2;">
-                <div style="border-bottom:1px solid #111; padding-bottom:10px; margin-bottom:10px; color:#cccccc;">
-                    Add order_items for product-level analytics</div>
-                <div style="border-bottom:1px solid #111; padding-bottom:10px; margin-bottom:10px;">
-                    Connect directly to RDS MySQL at query time</div>
-                <div style="border-bottom:1px solid #111; padding-bottom:10px; margin-bottom:10px;">
-                    Chart generation for visual answers</div>
-                <div style="border-bottom:1px solid #111; padding-bottom:10px; margin-bottom:10px;">
-                    Multi-turn conversation memory</div>
-                <div style="border-bottom:1px solid #111; padding-bottom:10px; margin-bottom:10px;">
-                    User authentication and query history</div>
-                <div style="border-bottom:1px solid #111; padding-bottom:10px; margin-bottom:10px;">
-                    Export answers to CSV or PDF</div>
+        <div style="border:1px solid #1a1a1a; padding:28px; margin-bottom:16px;">
+            <div style="font-family:IBM Plex Mono,monospace; font-size:10px; color:#444; letter-spacing:0.15em; text-transform:uppercase; margin-bottom:20px;">Improvements</div>
+            <div style="font-size:13px; color:#888; line-height:2.2;">
+                <div style="border-bottom:1px solid #111; padding-bottom:10px; margin-bottom:10px; color:#ccc;">Add order_items for product-level analytics</div>
+                <div style="border-bottom:1px solid #111; padding-bottom:10px; margin-bottom:10px;">Connect directly to RDS MySQL at query time</div>
+                <div style="border-bottom:1px solid #111; padding-bottom:10px; margin-bottom:10px;">Chart generation for visual answers</div>
+                <div style="border-bottom:1px solid #111; padding-bottom:10px; margin-bottom:10px;">Multi-turn conversation memory</div>
+                <div style="border-bottom:1px solid #111; padding-bottom:10px; margin-bottom:10px;">User authentication and query history</div>
+                <div style="border-bottom:1px solid #111; padding-bottom:10px; margin-bottom:10px;">Export answers to CSV or PDF</div>
                 <div>Deploy on AWS ECS with a custom domain</div>
             </div>
         </div>
         """, unsafe_allow_html=True)
 
-        # ── Stack ─────────────────────────────────────────────────────────────
+        # Stack
         st.markdown("""
-        <div style="border: 1px solid #1a1a1a; padding: 28px;">
-            <p style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #444444;
-                      letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 20px;">Stack</p>
-            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #666666; line-height: 2.4;">
+        <div style="border:1px solid #1a1a1a; padding:28px;">
+            <div style="font-family:IBM Plex Mono,monospace; font-size:10px; color:#444; letter-spacing:0.15em; text-transform:uppercase; margin-bottom:20px;">Stack</div>
+            <div style="font-family:IBM Plex Mono,monospace; font-size:12px; color:#666; line-height:2.4;">
                 <div><span style="color:#333">LLM&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color:#ccc">Groq / Llama 3.1 8B</span></div>
                 <div><span style="color:#333">Embeddings&nbsp;</span><span style="color:#ccc">HuggingFace all-MiniLM-L6-v2</span></div>
                 <div><span style="color:#333">Vector DB&nbsp;&nbsp;</span><span style="color:#ccc">Numpy cosine similarity</span></div>
