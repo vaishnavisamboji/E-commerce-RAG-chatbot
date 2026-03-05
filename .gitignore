@@ -1,0 +1,5 @@
+embeddings.npy
+documents.pkl
+env
+chroma_db_local/
+.ipynb_checkpoints/
