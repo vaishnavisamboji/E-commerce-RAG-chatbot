@@ -15,7 +15,7 @@ from langchain_core.output_parsers import StrOutputParser
 # PAGE CONFIG
 # =============================================================================
 st.set_page_config(
-    page_title="DataChat",
+    page_title="Talk to your Data",
     page_icon=None,
     layout="wide",
     initial_sidebar_state="collapsed"
