@@ -692,6 +692,42 @@ with tab5:
     </p>
     """, unsafe_allow_html=True)
 
+    # Compute monthly revenue
+    # Merge orders and payments
+    orders_df = dfs['orders']
+    payments_df = dfs['payments']
+    # Merge on order_id
+    merged = pd.merge(orders_df, payments_df, on='order_id')
+    # Convert order_purchase_timestamp to datetime
+    merged['order_purchase_timestamp'] = pd.to_datetime(merged['order_purchase_timestamp'])
+    merged['month'] = merged['order_purchase_timestamp'].dt.to_period('M').astype(str)
+    monthly_revenue = merged.groupby('month')['payment_value'].sum().reset_index()
+    monthly_revenue = monthly_revenue.sort_values('month')
+
+    # Compute average delivery days by state
+    # We need delivery_days: we can compute from orders_df if we have it, but in our dataset we might have delivery_days already? In original notebook, they computed delivery_days as difference between order_delivered_customer_date and order_purchase_timestamp. Let's compute.
+    orders = dfs['orders'].copy()
+    orders['order_purchase_timestamp'] = pd.to_datetime(orders['order_purchase_timestamp'])
+    orders['order_delivered_customer_date'] = pd.to_datetime(orders['order_delivered_customer_date'])
+    orders['delivery_days'] = (orders['order_delivered_customer_date'] - orders['order_purchase_timestamp']).dt.days
+    # Merge with customers to get state
+    customers_df = dfs['customers']
+    merged_delivery = pd.merge(orders, customers_df, on='customer_id')
+    # Drop NaN delivery days
+    merged_delivery = merged_delivery.dropna(subset=['delivery_days'])
+    state_delivery = merged_delivery.groupby('customer_state')['delivery_days'].mean().reset_index().sort_values('delivery_days', ascending=False).head(10)
+
+    # Create two columns
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.subheader("Total Revenue by Month")
+        st.line_chart(monthly_revenue.set_index('month'))
+
+    with col2:
+        st.subheader("Average Delivery Days by State (Top 10)")
+        st.bar_chart(state_delivery.set_index('customer_state'))
+
     st.image('images/dashboard.png', use_container_width=True)
 
     st.markdown("""
