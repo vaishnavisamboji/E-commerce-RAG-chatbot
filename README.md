@@ -6,7 +6,7 @@ url: https://e-commerce-rag-chatbot-flr6vevdzueohmjn5qmb49.streamlit.app/
 
 A natural language analytics interface for the Olist Brazilian E-Commerce dataset. Ask questions in plain English — no SQL, no pandas required.
 
-**Live demo:** [your-app.streamlit.app](https://your-app.streamlit.app)
+**Live demo:** [llm-powered-e-commerce-analytics.streamlit.app](https://llm-powered-e-commerce-analytics.streamlit.app/)
 
 ---
 
