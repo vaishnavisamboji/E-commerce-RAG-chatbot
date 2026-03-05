@@ -1,7 +1,3 @@
-# E-commerce-RAG-chatbot
-
-url: https://e-commerce-rag-chatbot-flr6vevdzueohmjn5qmb49.streamlit.app/
-
 # Talk to Your Data — LLM-Powered E-Commerce Analytics
 
 A natural language analytics interface for the Olist Brazilian E-Commerce dataset. Ask questions in plain English — no SQL, no pandas required.
