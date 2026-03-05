@@ -628,7 +628,154 @@ with tab3:
         </div>
     </div>
     """, unsafe_allow_html=True)
+    st.markdown("""
+    <div style="font-family:IBM Plex Mono,monospace; font-size:10px; color:#444; letter-spacing:0.15em; text-transform:uppercase; margin-bottom:16px; margin-top:8px;">Full Pipeline</div>
 
+    <div style="border:1px solid #1a1a1a; padding:32px; overflow-x:auto;">
+
+      <!-- PHASE 1 — INGESTION -->
+      <div style="display:flex; align-items:center; gap:0; margin-bottom:4px;">
+        <div style="font-family:IBM Plex Mono,monospace; font-size:9px; color:#333; text-transform:uppercase; letter-spacing:0.12em; width:100px; text-align:right; padding-right:16px; flex-shrink:0;">Ingestion</div>
+        <div style="background:#080808; border:1px solid #1e1e1e; padding:10px 14px; font-size:12px; color:#ccc; white-space:nowrap;">Raw Olist CSVs<div style="font-size:9px; color:#444; margin-top:3px;">orders · customers · products · reviews · payments · sellers</div></div>
+        <div style="color:#2a2a2a; padding:0 8px; font-size:13px; flex-shrink:0;">&#8594;</div>
+        <div style="background:#05080d; border:1px solid #1a2a3a; padding:10px 14px; font-size:12px; color:#6aadcf; white-space:nowrap;">AWS S3<div style="font-size:9px; color:#2a4a5a; margin-top:3px;">brazilian-ecommerce-vs · us-west-1</div></div>
+      </div>
+
+      <!-- connector -->
+      <div style="display:flex; margin-bottom:4px;">
+        <div style="width:100px; flex-shrink:0;"></div>
+        <div style="width:16px; border-left:1px solid #1a1a1a; margin-left:0; height:20px;"></div>
+      </div>
+
+      <!-- PHASE 2 — PROCESSING -->
+      <div style="display:flex; align-items:center; gap:0; margin-bottom:4px;">
+        <div style="font-family:IBM Plex Mono,monospace; font-size:9px; color:#333; text-transform:uppercase; letter-spacing:0.12em; width:100px; text-align:right; padding-right:16px; flex-shrink:0;">Processing</div>
+        <div style="background:#05080d; border:1px solid #1a2a3a; padding:10px 14px; font-size:12px; color:#6aadcf; white-space:nowrap;">AWS S3</div>
+        <div style="color:#2a2a2a; padding:0 8px; font-size:13px; flex-shrink:0;">&#8594;</div>
+        <div style="background:#080808; border:1px solid #1e1e1e; padding:10px 14px; font-size:12px; color:#ccc; white-space:nowrap;">Jupyter Notebook<div style="font-size:9px; color:#444; margin-top:3px;">s3fs · pandas</div></div>
+        <div style="color:#2a2a2a; padding:0 8px; font-size:13px; flex-shrink:0;">&#8594;</div>
+        <div style="background:#080808; border:1px solid #1e1e1e; padding:10px 14px; font-size:12px; color:#ccc; white-space:nowrap;">Clean + Feature Engineer<div style="font-size:9px; color:#444; margin-top:3px;">delivery_days · is_late · total_revenue</div></div>
+        <div style="color:#2a2a2a; padding:0 8px; font-size:13px; flex-shrink:0;">&#8594;</div>
+        <div style="background:#05080d; border:1px solid #1a2a3a; padding:10px 14px; font-size:12px; color:#6aadcf; white-space:nowrap;">S3 (processed CSVs)<div style="font-size:9px; color:#2a4a5a; margin-top:3px;">6 cleaned tables</div></div>
+      </div>
+
+      <!-- connector -->
+      <div style="display:flex; margin-bottom:4px;">
+        <div style="width:100px; flex-shrink:0;"></div>
+        <div style="width:16px; border-left:1px solid #1a1a1a; margin-left:0; height:20px;"></div>
+      </div>
+
+      <!-- PHASE 3 — SQL ANALYTICS -->
+      <div style="display:flex; align-items:center; gap:0; margin-bottom:4px;">
+        <div style="font-family:IBM Plex Mono,monospace; font-size:9px; color:#333; text-transform:uppercase; letter-spacing:0.12em; width:100px; text-align:right; padding-right:16px; flex-shrink:0;">SQL Analytics</div>
+        <div style="background:#05080d; border:1px solid #1a2a3a; padding:10px 14px; font-size:12px; color:#6aadcf; white-space:nowrap;">S3 (processed)</div>
+        <div style="color:#2a2a2a; padding:0 8px; font-size:13px; flex-shrink:0;">&#8594;</div>
+        <div style="background:#080808; border:1px solid #1e1e1e; padding:10px 14px; font-size:12px; color:#ccc; white-space:nowrap;">AWS RDS MySQL<div style="font-size:9px; color:#444; margin-top:3px;">SQLAlchemy · 6 tables loaded</div></div>
+        <div style="color:#2a2a2a; padding:0 8px; font-size:13px; flex-shrink:0;">&#8594;</div>
+        <div style="background:#080808; border:1px solid #1e1e1e; padding:10px 14px; font-size:12px; color:#ccc; white-space:nowrap;">SQL Queries<div style="font-size:9px; color:#444; margin-top:3px;">monthly · segments · delivery · payments · products</div></div>
+        <div style="color:#2a2a2a; padding:0 8px; font-size:13px; flex-shrink:0;">&#8594;</div>
+        <div style="background:#080808; border:1px solid #1e1e1e; padding:10px 14px; font-size:12px; color:#ccc; white-space:nowrap;">5 Summary Tables<div style="font-size:9px; color:#444; margin-top:3px;">saved back to MySQL</div></div>
+        <div style="color:#2a2a2a; padding:0 8px; font-size:13px; flex-shrink:0;">&#8594;</div>
+        <div style="background:#060d06; border:1px solid #1f3a1f; padding:10px 14px; font-size:12px; color:#6dbf6d; white-space:nowrap;">Power BI Dashboard<div style="font-size:9px; color:#2a5a2a; margin-top:3px;">MySQL connector</div></div>
+      </div>
+
+      <!-- connector -->
+      <div style="display:flex; margin-bottom:4px;">
+        <div style="width:100px; flex-shrink:0;"></div>
+        <div style="width:16px; border-left:1px solid #1a1a1a; margin-left:0; height:20px;"></div>
+      </div>
+
+      <!-- PHASE 4 — EMBEDDING -->
+      <div style="display:flex; align-items:center; gap:0; margin-bottom:4px;">
+        <div style="font-family:IBM Plex Mono,monospace; font-size:9px; color:#333; text-transform:uppercase; letter-spacing:0.12em; width:100px; text-align:right; padding-right:16px; flex-shrink:0;">Embedding</div>
+        <div style="background:#05080d; border:1px solid #1a2a3a; padding:10px 14px; font-size:12px; color:#6aadcf; white-space:nowrap;">S3 (processed)</div>
+        <div style="color:#2a2a2a; padding:0 8px; font-size:13px; flex-shrink:0;">&#8594;</div>
+        <div style="background:#080808; border:1px solid #1e1e1e; padding:10px 14px; font-size:12px; color:#ccc; white-space:nowrap;">Kaggle T4 GPU<div style="font-size:9px; color:#444; margin-top:3px;">438,038 LangChain Documents</div></div>
+        <div style="color:#2a2a2a; padding:0 8px; font-size:13px; flex-shrink:0;">&#8594;</div>
+        <div style="background:#080808; border:1px solid #1e1e1e; padding:10px 14px; font-size:12px; color:#ccc; white-space:nowrap;">all-MiniLM-L6-v2<div style="font-size:9px; color:#444; margin-top:3px;">HuggingFace · normalize embeddings</div></div>
+        <div style="color:#2a2a2a; padding:0 8px; font-size:13px; flex-shrink:0;">&#8594;</div>
+        <div style="background:#05080d; border:1px solid #1a2a3a; padding:10px 14px; font-size:12px; color:#6aadcf; white-space:nowrap;">embeddings.npy + documents.pkl<div style="font-size:9px; color:#2a4a5a; margin-top:3px;">uploaded to S3</div></div>
+      </div>
+
+      <!-- connector -->
+      <div style="display:flex; margin-bottom:4px;">
+        <div style="width:100px; flex-shrink:0;"></div>
+        <div style="width:16px; border-left:1px solid #1a1a1a; margin-left:0; height:20px;"></div>
+      </div>
+
+      <!-- PHASE 5 — APP STARTUP -->
+      <div style="display:flex; align-items:center; gap:0; margin-bottom:4px;">
+        <div style="font-family:IBM Plex Mono,monospace; font-size:9px; color:#333; text-transform:uppercase; letter-spacing:0.12em; width:100px; text-align:right; padding-right:16px; flex-shrink:0;">App Startup</div>
+        <div style="background:#05080d; border:1px solid #1a2a3a; padding:10px 14px; font-size:12px; color:#6aadcf; white-space:nowrap;">S3 cold-start download<div style="font-size:9px; color:#2a4a5a; margin-top:3px;">embeddings.npy · documents.pkl · 6 CSVs</div></div>
+        <div style="color:#2a2a2a; padding:0 8px; font-size:13px; flex-shrink:0;">&#8594;</div>
+        <div style="background:#080808; border:1px solid #1e1e1e; padding:10px 14px; font-size:12px; color:#fff; white-space:nowrap;">User Question</div>
+        <div style="color:#2a2a2a; padding:0 8px; font-size:13px; flex-shrink:0;">&#8594;</div>
+        <div style="background:#0a0800; border:1px solid #2a2010; padding:10px 14px; font-size:12px; color:#c4a35a; white-space:nowrap;">3-Way Router<div style="font-size:9px; color:#5a4a20; margin-top:3px;">LangChain LCEL</div></div>
+      </div>
+
+      <!-- connector -->
+      <div style="display:flex; margin-bottom:4px;">
+        <div style="width:100px; flex-shrink:0;"></div>
+        <div style="width:16px; border-left:1px solid #1a1a1a; margin-left:0; height:20px;"></div>
+      </div>
+
+      <!-- PHASE 6 — ROUTING (3 branches) -->
+      <div style="display:flex; align-items:flex-start; gap:0;">
+        <div style="font-family:IBM Plex Mono,monospace; font-size:9px; color:#333; text-transform:uppercase; letter-spacing:0.12em; width:100px; text-align:right; padding-right:16px; flex-shrink:0; padding-top:14px;">Routing</div>
+        <div style="border-left:1px solid #1a1a1a; padding-left:0; display:flex; flex-direction:column; gap:8px;">
+
+          <!-- Route A -->
+          <div style="display:flex; align-items:center; gap:0;">
+            <div style="width:20px; height:1px; background:#1a1a1a; flex-shrink:0;"></div>
+            <div style="font-family:IBM Plex Mono,monospace; font-size:9px; color:#333; text-transform:uppercase; letter-spacing:0.1em; padding:4px 8px; border:1px solid #151515; background:#050505; white-space:nowrap; margin-right:8px;">ID Detected</div>
+            <div style="color:#2a2a2a; padding:0 8px; font-size:13px; flex-shrink:0;">&#8594;</div>
+            <div style="background:#080808; border:1px solid #161616; padding:8px 12px; font-size:11px; color:#555; white-space:nowrap;">Regex match</div>
+            <div style="color:#222; padding:0 8px; font-size:13px; flex-shrink:0;">&#8594;</div>
+            <div style="background:#080808; border:1px solid #161616; padding:8px 12px; font-size:11px; color:#555; white-space:nowrap;">Direct dataframe scan</div>
+            <div style="color:#222; padding:0 8px; font-size:13px; flex-shrink:0;">&#8594;</div>
+            <div style="background:#080808; border:1px solid #161616; padding:8px 12px; font-size:11px; color:#555; white-space:nowrap;">Groq · Llama 3.1 8B</div>
+            <div style="color:#222; padding:0 8px; font-size:13px; flex-shrink:0;">&#8594;</div>
+            <div style="background:#0a0a0a; border:1px solid #222; padding:8px 14px; font-size:12px; color:#fff; white-space:nowrap;">Answer</div>
+          </div>
+
+          <!-- Route B -->
+          <div style="display:flex; align-items:center; gap:0;">
+            <div style="width:20px; height:1px; background:#1a1a1a; flex-shrink:0;"></div>
+            <div style="font-family:IBM Plex Mono,monospace; font-size:9px; color:#333; text-transform:uppercase; letter-spacing:0.1em; padding:4px 8px; border:1px solid #151515; background:#050505; white-space:nowrap; margin-right:8px;">Aggregate</div>
+            <div style="color:#2a2a2a; padding:0 8px; font-size:13px; flex-shrink:0;">&#8594;</div>
+            <div style="background:#080808; border:1px solid #161616; padding:8px 12px; font-size:11px; color:#555; white-space:nowrap;">Schema + prompt</div>
+            <div style="color:#222; padding:0 8px; font-size:13px; flex-shrink:0;">&#8594;</div>
+            <div style="background:#080808; border:1px solid #161616; padding:8px 12px; font-size:11px; color:#555; white-space:nowrap;">Codegen &#8594; exec</div>
+            <div style="color:#222; padding:0 8px; font-size:13px; flex-shrink:0;">&#8594;</div>
+            <div style="background:#080808; border:1px solid #161616; padding:8px 12px; font-size:11px; color:#555; white-space:nowrap;">Auto-retry on error</div>
+            <div style="color:#222; padding:0 8px; font-size:13px; flex-shrink:0;">&#8594;</div>
+            <div style="background:#080808; border:1px solid #161616; padding:8px 12px; font-size:11px; color:#555; white-space:nowrap;">Groq · Llama 3.1 8B</div>
+            <div style="color:#222; padding:0 8px; font-size:13px; flex-shrink:0;">&#8594;</div>
+            <div style="background:#0a0a0a; border:1px solid #222; padding:8px 14px; font-size:12px; color:#fff; white-space:nowrap;">Answer</div>
+          </div>
+
+          <!-- Route C -->
+          <div style="display:flex; align-items:center; gap:0;">
+            <div style="width:20px; height:1px; background:#1a1a1a; flex-shrink:0;"></div>
+            <div style="font-family:IBM Plex Mono,monospace; font-size:9px; color:#333; text-transform:uppercase; letter-spacing:0.1em; padding:4px 8px; border:1px solid #151515; background:#050505; white-space:nowrap; margin-right:8px;">RAG</div>
+            <div style="color:#2a2a2a; padding:0 8px; font-size:13px; flex-shrink:0;">&#8594;</div>
+            <div style="background:#080808; border:1px solid #161616; padding:8px 12px; font-size:11px; color:#555; white-space:nowrap;">Embed query</div>
+            <div style="color:#222; padding:0 8px; font-size:13px; flex-shrink:0;">&#8594;</div>
+            <div style="background:#080808; border:1px solid #161616; padding:8px 12px; font-size:11px; color:#555; white-space:nowrap;">Cosine similarity</div>
+            <div style="color:#222; padding:0 8px; font-size:13px; flex-shrink:0;">&#8594;</div>
+            <div style="background:#080808; border:1px solid #161616; padding:8px 12px; font-size:11px; color:#555; white-space:nowrap;">Top 10 docs</div>
+            <div style="color:#222; padding:0 8px; font-size:13px; flex-shrink:0;">&#8594;</div>
+            <div style="background:#080808; border:1px solid #161616; padding:8px 12px; font-size:11px; color:#555; white-space:nowrap;">Groq · Llama 3.1 8B</div>
+            <div style="color:#222; padding:0 8px; font-size:13px; flex-shrink:0;">&#8594;</div>
+            <div style="background:#0a0a0a; border:1px solid #222; padding:8px 14px; font-size:12px; color:#fff; white-space:nowrap;">Answer</div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+    """, unsafe_allow_html=True)
+    
     st.markdown('<div style="height:24px;"></div>', unsafe_allow_html=True)
     st.markdown('<div style="font-family:IBM Plex Mono,monospace; font-size:10px; color:#444; letter-spacing:0.15em; text-transform:uppercase; margin-bottom:16px;">Loaded data</div>', unsafe_allow_html=True)
     cols = st.columns(len(dfs))
