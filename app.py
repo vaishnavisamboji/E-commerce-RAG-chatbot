@@ -630,268 +630,165 @@ with tab3:
     """, unsafe_allow_html=True)
 
     # flowchart
-    st.markdown("""
-    <div style="font-family:IBM Plex Mono,monospace; font-size:10px; color:#444; letter-spacing:0.15em; text-transform:uppercase; margin:8px 0 16px 0;">Full Pipeline</div>
-    <div style="border:1px solid #1a1a1a; padding:32px; overflow-x:auto;">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1200" style="width:100%; max-width:900px; display:block; margin:0 auto; font-family:'IBM Plex Mono',monospace;">
+    # ── PIPELINE FLOWCHART ────────────────────────────────────────────────────
+    st.markdown('<div style="font-family:IBM Plex Mono,monospace; font-size:10px; color:#444; letter-spacing:0.15em; text-transform:uppercase; margin:8px 0 16px 0;">Full Pipeline</div>', unsafe_allow_html=True)
 
-      <!-- ─── DEFS ─── -->
-      <defs>
-        <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-          <path d="M0,0 L0,6 L8,3 z" fill="#2a2a2a"/>
-        </marker>
-        <marker id="arr-branch" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-          <path d="M0,0 L0,6 L8,3 z" fill="#1e1e1e"/>
-        </marker>
-      </defs>
+    import matplotlib
+    matplotlib.use('Agg')
+    import matplotlib.pyplot as plt
+    import matplotlib.patches as mpatches
+    from matplotlib.patches import FancyBboxPatch
+    import io
 
-      <!-- ══════════════════════════════════════════════════════
-           PHASE 1 — INGESTION
-      ══════════════════════════════════════════════════════ -->
+    def _pipeline_chart():
+        fig, ax = plt.subplots(figsize=(14, 20))
+        fig.patch.set_facecolor('#000000')
+        ax.set_facecolor('#000000')
+        ax.set_xlim(0, 14)
+        ax.set_ylim(0, 20)
+        ax.axis('off')
 
-      <!-- Raw CSVs -->
-      <rect x="60" y="30" width="200" height="56" fill="#0a0a0a" stroke="#222" stroke-width="1"/>
-      <text x="160" y="53" text-anchor="middle" fill="#ccc" font-size="12">Raw Olist CSVs</text>
-      <text x="160" y="70" text-anchor="middle" fill="#444" font-size="9">orders · customers · products</text>
-      <text x="160" y="82" text-anchor="middle" fill="#444" font-size="9">reviews · payments · sellers</text>
+        C_BOX    = '#0a0a0a'; C_BORDER = '#222222'; C_TEXT = '#cccccc'
+        C_DIM    = '#555555'; C_LABEL  = '#333333'; C_ARROW = '#2a2a2a'
+        C_S3     = '#05080d'; C_S3B    = '#1a2a3a'; C_S3T  = '#6aadcf'
+        C_BI     = '#060d06'; C_BIB    = '#1f3a1f'; C_BIT  = '#6dbf6d'
+        C_ROUTER = '#0a0800'; C_ROUTERB= '#2a2010'; C_ROUTERT= '#c4a35a'
+        C_ANS    = '#0d0d0d'; C_ANSB   = '#333333'; C_ANST = '#ffffff'
+        C_SUB    = '#444444'; FONT     = 'monospace'
 
-      <!-- arrow -->
-      <line x1="260" y1="58" x2="330" y2="58" stroke="#2a2a2a" stroke-width="1" marker-end="url(#arr)"/>
+        def box(ax, x, y, w, h, label, sub='', fc=C_BOX, ec=C_BORDER, tc=C_TEXT, sc=C_SUB):
+            rect = FancyBboxPatch((x-w/2, y-h/2), w, h, boxstyle="square,pad=0",
+                                  linewidth=1, edgecolor=ec, facecolor=fc)
+            ax.add_patch(rect)
+            if sub:
+                ax.text(x, y+0.13, label, ha='center', va='center',
+                        color=tc, fontsize=9, fontfamily=FONT)
+                ax.text(x, y-0.22, sub, ha='center', va='center',
+                        color=sc, fontsize=6.5, fontfamily=FONT)
+            else:
+                ax.text(x, y, label, ha='center', va='center',
+                        color=tc, fontsize=9, fontfamily=FONT)
 
-      <!-- AWS S3 (raw) -->
-      <rect x="330" y="30" width="160" height="56" fill="#05080d" stroke="#1a2a3a" stroke-width="1"/>
-      <text x="410" y="53" text-anchor="middle" fill="#6aadcf" font-size="12">AWS S3</text>
-      <text x="410" y="70" text-anchor="middle" fill="#2a4a5a" font-size="9">brazilian-ecommerce-vs</text>
-      <text x="410" y="82" text-anchor="middle" fill="#2a4a5a" font-size="9">us-west-1</text>
+        def diamond(ax, x, y, w, h, label, sub='', fc=C_ROUTER, ec=C_ROUTERB, tc=C_ROUTERT):
+            pts = [(x, y+h/2), (x+w/2, y), (x, y-h/2), (x-w/2, y)]
+            poly = plt.Polygon(pts, closed=True, facecolor=fc, edgecolor=ec, linewidth=1)
+            ax.add_patch(poly)
+            ax.text(x, y+0.12, label, ha='center', va='center', color=tc, fontsize=8.5, fontfamily=FONT)
+            if sub:
+                ax.text(x, y-0.18, sub, ha='center', va='center', color='#5a4a20', fontsize=6.5, fontfamily=FONT)
 
-      <!-- phase label -->
-      <text x="22" y="62" text-anchor="middle" fill="#333" font-size="8" letter-spacing="1">INGEST</text>
+        def arrow(ax, x1, y1, x2, y2):
+            ax.annotate('', xy=(x2, y2), xytext=(x1, y1),
+                        arrowprops=dict(arrowstyle='->', color=C_ARROW, lw=1, mutation_scale=12))
 
-      <!-- ── vertical connector ── -->
-      <line x1="410" y1="86" x2="410" y2="126" stroke="#1a1a1a" stroke-width="1" marker-end="url(#arr)"/>
+        def line(ax, x1, y1, x2, y2):
+            ax.plot([x1, x2], [y1, y2], color='#1a1a1a', lw=1)
 
-      <!-- ══════════════════════════════════════════════════════
-           PHASE 2 — PROCESSING
-      ══════════════════════════════════════════════════════ -->
+        def phase_label(ax, y, text):
+            for i, t in enumerate(text.split('\n')):
+                ax.text(0.35, y - i*0.25, t, ha='center', va='center',
+                        color=C_LABEL, fontsize=6.5, fontfamily=FONT, fontstyle='italic', alpha=0.8)
 
-      <!-- Jupyter -->
-      <rect x="270" y="126" width="140" height="52" fill="#0a0a0a" stroke="#222" stroke-width="1"/>
-      <text x="340" y="148" text-anchor="middle" fill="#ccc" font-size="12">Jupyter Notebook</text>
-      <text x="340" y="165" text-anchor="middle" fill="#444" font-size="9">s3fs · pandas · boto3</text>
+        # ── PHASE 1 — INGESTION ──
+        phase_label(ax, 19, 'INGESTION')
+        box(ax, 4, 19, 3.2, 0.7, 'Raw Olist CSVs', 'orders · customers · products · reviews · payments · sellers')
+        arrow(ax, 5.6, 19, 6.4, 19)
+        box(ax, 7.8, 19, 2.4, 0.7, 'AWS S3', 'brazilian-ecommerce-vs · us-west-1', fc=C_S3, ec=C_S3B, tc=C_S3T, sc='#2a4a5a')
 
-      <!-- arrow from S3 to Jupyter -->
-      <line x1="410" y1="126" x2="410" y2="152" stroke="#1a1a1a" stroke-width="1"/>
-      <line x1="340" y1="152" x2="410" y2="152" stroke="#1a1a1a" stroke-width="1" marker-end="url(#arr)"/>
-      <line x1="340" y1="152" x2="340" y2="126" stroke="#1a1a1a" stroke-width="1" marker-end="url(#arr)"/>
+        # ── PHASE 2 — PROCESSING ──
+        phase_label(ax, 17, 'PROCESSING')
+        line(ax, 7.8, 18.65, 7.8, 17.35)
+        arrow(ax, 7.8, 17.35, 7.8, 17.35)
+        box(ax, 7.8, 17, 2.4, 0.7, 'AWS S3', '6 raw CSVs loaded', fc=C_S3, ec=C_S3B, tc=C_S3T, sc='#2a4a5a')
+        arrow(ax, 6.6, 17, 5.8, 17)
+        box(ax, 4.6, 17, 2.2, 0.7, 'Jupyter Notebook', 's3fs · pandas · boto3')
+        arrow(ax, 3.5, 17, 2.7, 17)
+        box(ax, 1.7, 17, 1.8, 0.7, 'Clean + FE', 'delivery_days · is_late · total_revenue')
+        line(ax, 0.8, 17, 0.8, 15.35)
+        line(ax, 0.8, 15.35, 3.6, 15.35)
+        arrow(ax, 3.6, 15.35, 3.6, 15.35)
+        ax.text(0.55, 16.2, 'upload\ncleaned\nCSVs', ha='center', va='center',
+                color='#2a2a2a', fontsize=6, fontfamily=FONT)
 
-      <!-- arrow -->
-      <line x1="410" y1="152" x2="490" y2="152" stroke="#2a2a2a" stroke-width="1" marker-end="url(#arr)"/>
+        # ── PHASE 3 — SQL ANALYTICS ──
+        phase_label(ax, 15, 'SQL\nANALYTICS')
+        box(ax, 4.8, 15, 2.4, 0.7, 'S3 (processed)', '6 cleaned CSVs', fc=C_S3, ec=C_S3B, tc=C_S3T, sc='#2a4a5a')
+        arrow(ax, 6.0, 15, 6.8, 15)
+        box(ax, 8.0, 15, 2.2, 0.7, 'AWS RDS MySQL', 'SQLAlchemy · 6 tables')
+        arrow(ax, 9.1, 15, 9.9, 15)
+        box(ax, 11.0, 15, 2.0, 0.7, 'SQL Queries', 'monthly · segments\ndelivery · payments')
+        arrow(ax, 11.0, 14.65, 11.0, 13.35)
+        box(ax, 11.0, 13, 2.0, 0.7, '5 Summary Tables', 'saved → MySQL')
+        arrow(ax, 12.0, 13, 12.8, 13)
+        box(ax, 13.3, 13, 1.0, 0.7, 'Power BI', 'MySQL\nconnector', fc=C_BI, ec=C_BIB, tc=C_BIT, sc='#2a5a2a')
 
-      <!-- Clean + FE -->
-      <rect x="490" y="126" width="180" height="52" fill="#0a0a0a" stroke="#222" stroke-width="1"/>
-      <text x="580" y="148" text-anchor="middle" fill="#ccc" font-size="12">Clean + Feature Eng.</text>
-      <text x="580" y="165" text-anchor="middle" fill="#444" font-size="9">delivery_days · is_late · total_revenue</text>
+        # ── PHASE 4 — EMBEDDING ──
+        phase_label(ax, 13, 'EMBEDDING')
+        line(ax, 4.8, 14.65, 4.8, 12.65)
+        arrow(ax, 4.8, 12.65, 4.8, 12.65)
+        box(ax, 4.8, 12.3, 2.4, 0.7, 'S3 (processed)', '6 cleaned CSVs', fc=C_S3, ec=C_S3B, tc=C_S3T, sc='#2a4a5a')
+        arrow(ax, 3.6, 12.3, 2.8, 12.3)
+        box(ax, 1.8, 12.3, 2.0, 0.7, 'Kaggle T4 GPU', '438,038 LangChain Docs')
+        arrow(ax, 1.8, 11.95, 1.8, 11.15)
+        box(ax, 1.8, 10.8, 2.0, 0.7, 'all-MiniLM-L6-v2', 'HuggingFace · GPU embed')
+        arrow(ax, 1.8, 10.45, 1.8, 9.65)
+        box(ax, 1.8, 9.3, 2.2, 0.7, 'embeddings.npy\n+ documents.pkl', '→ uploaded to S3', fc=C_S3, ec=C_S3B, tc=C_S3T, sc='#2a4a5a')
 
-      <!-- arrow -->
-      <line x1="670" y1="152" x2="750" y2="152" stroke="#2a2a2a" stroke-width="1" marker-end="url(#arr)"/>
+        # ── PHASE 5 — APP STARTUP ──
+        phase_label(ax, 8, 'APP\nSTARTUP')
+        line(ax, 1.8, 8.95, 1.8, 8.35)
+        arrow(ax, 1.8, 8.35, 1.8, 8.35)
+        box(ax, 1.8, 8.0, 2.4, 0.7, 'S3 cold-start', 'embeddings.npy · docs.pkl · CSVs', fc=C_S3, ec=C_S3B, tc=C_S3T, sc='#2a4a5a')
+        arrow(ax, 3.0, 8.0, 3.8, 8.0)
+        box(ax, 5.0, 8.0, 2.2, 0.7, 'User Question', 'plain English input', fc='#0d0d0d', ec='#2a2a2a', tc='#ffffff')
+        arrow(ax, 6.1, 8.0, 7.0, 8.0)
+        diamond(ax, 8.2, 8.0, 2.2, 0.9, '3-Way Router', 'LangChain LCEL')
 
-      <!-- S3 processed -->
-      <rect x="750" y="126" width="130" height="52" fill="#05080d" stroke="#1a2a3a" stroke-width="1"/>
-      <text x="815" y="148" text-anchor="middle" fill="#6aadcf" font-size="12">S3 (processed)</text>
-      <text x="815" y="165" text-anchor="middle" fill="#2a4a5a" font-size="9">6 cleaned CSVs</text>
+        # ── PHASE 6 — ROUTING ──
+        phase_label(ax, 6.5, 'ROUTING')
+        line(ax, 8.2, 7.55, 8.2, 7.0)
+        line(ax, 2.5, 7.0, 13.5, 7.0)
+        for bxi, bl in zip([2.5, 8.0, 13.5], ['ID DETECTED', 'AGGREGATE', 'RAG']):
+            line(ax, bxi, 7.0, bxi, 6.6)
+            arrow(ax, bxi, 6.6, bxi, 6.6)
+            ax.text(bxi, 6.75, bl, ha='center', va='center',
+                    color='#3a3a3a', fontsize=6, fontfamily=FONT, fontstyle='italic')
 
-      <!-- phase label -->
-      <text x="22" y="156" text-anchor="middle" fill="#333" font-size="8" letter-spacing="1">PROCESS</text>
+        box(ax, 2.5, 6.2, 2.2, 0.65, 'Regex match', 'alphanumeric ID', fc='#080808', ec='#161616', tc=C_DIM, sc='#333')
+        arrow(ax, 2.5, 5.87, 2.5, 5.27)
+        box(ax, 2.5, 4.95, 2.2, 0.65, 'Direct DF scan', 'no embedding needed', fc='#080808', ec='#161616', tc=C_DIM, sc='#333')
 
-      <!-- ── S3 branches DOWN into phase 3 and phase 4 ── -->
-      <!-- vertical from S3 processed down -->
-      <line x1="815" y1="178" x2="815" y2="230" stroke="#1a1a1a" stroke-width="1"/>
-      <!-- horizontal split -->
-      <line x1="450" y1="230" x2="815" y2="230" stroke="#1a1a1a" stroke-width="1"/>
-      <!-- down to SQL Analytics -->
-      <line x1="450" y1="230" x2="450" y2="268" stroke="#1a1a1a" stroke-width="1" marker-end="url(#arr)"/>
-      <!-- down to Embedding -->
-      <line x1="815" y1="230" x2="815" y2="490" stroke="#1a1a1a" stroke-width="1" marker-end="url(#arr)"/>
+        box(ax, 8.0, 6.2, 2.4, 0.65, 'Schema + prompt', 'full schema injected', fc='#080808', ec='#161616', tc=C_DIM, sc='#333')
+        arrow(ax, 8.0, 5.87, 8.0, 5.27)
+        box(ax, 8.0, 4.95, 2.4, 0.65, 'Codegen → exec', 'auto-retry on error', fc='#080808', ec='#161616', tc=C_DIM, sc='#333')
 
-      <!-- ══════════════════════════════════════════════════════
-           PHASE 3 — SQL ANALYTICS
-      ══════════════════════════════════════════════════════ -->
+        box(ax, 13.5, 6.2, 2.0, 0.65, 'Embed query', 'all-MiniLM-L6-v2', fc='#080808', ec='#161616', tc=C_DIM, sc='#333')
+        arrow(ax, 13.5, 5.87, 13.5, 5.27)
+        box(ax, 13.5, 4.95, 2.0, 0.65, 'Cosine sim.', 'top 10 docs', fc='#080808', ec='#161616', tc=C_DIM, sc='#333')
 
-      <!-- RDS MySQL -->
-      <rect x="330" y="268" width="160" height="52" fill="#0a0a0a" stroke="#222" stroke-width="1"/>
-      <text x="410" y="290" text-anchor="middle" fill="#ccc" font-size="12">AWS RDS MySQL</text>
-      <text x="410" y="307" text-anchor="middle" fill="#444" font-size="9">SQLAlchemy · 6 tables</text>
+        line(ax, 2.5,  4.62, 2.5,  4.0)
+        line(ax, 8.0,  4.62, 8.0,  4.0)
+        line(ax, 13.5, 4.62, 13.5, 4.0)
+        line(ax, 2.5,  4.0,  13.5, 4.0)
+        line(ax, 8.0,  4.0,  8.0,  3.5)
+        arrow(ax, 8.0, 3.5, 8.0, 3.5)
 
-      <line x1="450" y1="268" x2="450" y2="294" stroke="#1a1a1a" stroke-width="1"/>
-      <line x1="410" y1="294" x2="450" y2="294" stroke="#1a1a1a" stroke-width="1" marker-end="url(#arr)"/>
-      <line x1="410" y1="294" x2="410" y2="268" stroke="#1a1a1a" stroke-width="1" marker-end="url(#arr)"/>
+        box(ax, 8.0, 3.2, 3.0, 0.65, 'Groq — Llama 3.1 8B', 'temperature 0 · sub-second inference')
+        arrow(ax, 8.0, 2.87, 8.0, 2.27)
+        box(ax, 8.0, 2.0, 2.2, 0.6, 'Answer', '', fc=C_ANS, ec=C_ANSB, tc=C_ANST)
 
-      <!-- arrow -->
-      <line x1="490" y1="294" x2="560" y2="294" stroke="#2a2a2a" stroke-width="1" marker-end="url(#arr)"/>
+        for yd in [18.3, 16.3, 14.3, 11.6, 8.7, 7.1]:
+            ax.plot([0.6, 13.9], [yd, yd], color='#0f0f0f', lw=0.5, linestyle='--')
 
-      <!-- SQL Queries -->
-      <rect x="560" y="268" width="160" height="52" fill="#0a0a0a" stroke="#222" stroke-width="1"/>
-      <text x="640" y="290" text-anchor="middle" fill="#ccc" font-size="12">SQL Queries</text>
-      <text x="640" y="307" text-anchor="middle" fill="#444" font-size="9">monthly · segments · delivery</text>
+        plt.tight_layout(pad=0.3)
+        buf = io.BytesIO()
+        plt.savefig(buf, format='png', dpi=150, bbox_inches='tight',
+                    facecolor='#000000', edgecolor='none')
+        plt.close(fig)
+        buf.seek(0)
+        return buf
 
-      <!-- arrow down to summary tables -->
-      <line x1="640" y1="320" x2="640" y2="358" stroke="#2a2a2a" stroke-width="1" marker-end="url(#arr)"/>
-
-      <!-- 5 Summary Tables -->
-      <rect x="560" y="358" width="160" height="52" fill="#0a0a0a" stroke="#222" stroke-width="1"/>
-      <text x="640" y="380" text-anchor="middle" fill="#ccc" font-size="12">5 Summary Tables</text>
-      <text x="640" y="397" text-anchor="middle" fill="#444" font-size="9">saved back to MySQL</text>
-
-      <!-- arrow to Power BI -->
-      <line x1="720" y1="384" x2="760" y2="384" stroke="#2a2a2a" stroke-width="1" marker-end="url(#arr)"/>
-
-      <!-- Power BI -->
-      <rect x="760" y="358" width="120" height="52" fill="#060d06" stroke="#1f3a1f" stroke-width="1"/>
-      <text x="820" y="380" text-anchor="middle" fill="#6dbf6d" font-size="12">Power BI</text>
-      <text x="820" y="397" text-anchor="middle" fill="#2a5a2a" font-size="9">MySQL connector</text>
-
-      <!-- phase label -->
-      <text x="22" y="300" text-anchor="middle" fill="#333" font-size="8" letter-spacing="1">SQL</text>
-      <text x="22" y="312" text-anchor="middle" fill="#333" font-size="8" letter-spacing="1">ANALYTICS</text>
-
-      <!-- ══════════════════════════════════════════════════════
-           PHASE 4 — EMBEDDING
-      ══════════════════════════════════════════════════════ -->
-
-      <!-- Kaggle T4 GPU -->
-      <rect x="695" y="490" width="155" height="52" fill="#0a0a0a" stroke="#222" stroke-width="1"/>
-      <text x="772" y="512" text-anchor="middle" fill="#ccc" font-size="12">Kaggle T4 GPU</text>
-      <text x="772" y="529" text-anchor="middle" fill="#444" font-size="9">438,038 LangChain Docs</text>
-
-      <!-- arrow -->
-      <line x1="695" y1="516" x2="610" y2="516" stroke="#2a2a2a" stroke-width="1" marker-end="url(#arr)"/>
-
-      <!-- all-MiniLM -->
-      <rect x="440" y="490" width="170" height="52" fill="#0a0a0a" stroke="#222" stroke-width="1"/>
-      <text x="525" y="512" text-anchor="middle" fill="#ccc" font-size="12">all-MiniLM-L6-v2</text>
-      <text x="525" y="529" text-anchor="middle" fill="#444" font-size="9">HuggingFace · normalize</text>
-
-      <!-- arrow -->
-      <line x1="440" y1="516" x2="360" y2="516" stroke="#2a2a2a" stroke-width="1" marker-end="url(#arr)"/>
-
-      <!-- embeddings S3 -->
-      <rect x="180" y="490" width="180" height="52" fill="#05080d" stroke="#1a2a3a" stroke-width="1"/>
-      <text x="270" y="512" text-anchor="middle" fill="#6aadcf" font-size="12">embeddings.npy</text>
-      <text x="270" y="529" text-anchor="middle" fill="#2a4a5a" font-size="9">+ documents.pkl → S3</text>
-
-      <!-- phase label -->
-      <text x="22" y="520" text-anchor="middle" fill="#333" font-size="8" letter-spacing="1">EMBED</text>
-
-      <!-- ── connector down ── -->
-      <line x1="270" y1="542" x2="270" y2="600" stroke="#1a1a1a" stroke-width="1" marker-end="url(#arr)"/>
-
-      <!-- ══════════════════════════════════════════════════════
-           PHASE 5 — APP STARTUP
-      ══════════════════════════════════════════════════════ -->
-
-      <!-- S3 cold start -->
-      <rect x="160" y="600" width="200" height="52" fill="#05080d" stroke="#1a2a3a" stroke-width="1"/>
-      <text x="260" y="622" text-anchor="middle" fill="#6aadcf" font-size="12">S3 cold-start download</text>
-      <text x="260" y="639" text-anchor="middle" fill="#2a4a5a" font-size="9">embeddings.npy · docs.pkl · 6 CSVs</text>
-
-      <!-- arrow -->
-      <line x1="360" y1="626" x2="420" y2="626" stroke="#2a2a2a" stroke-width="1" marker-end="url(#arr)"/>
-
-      <!-- User Question -->
-      <rect x="420" y="600" width="140" height="52" fill="#0d0d0d" stroke="#2a2a2a" stroke-width="1"/>
-      <text x="490" y="622" text-anchor="middle" fill="#fff" font-size="12">User Question</text>
-      <text x="490" y="639" text-anchor="middle" fill="#555" font-size="9">plain English</text>
-
-      <!-- arrow -->
-      <line x1="560" y1="626" x2="620" y2="626" stroke="#2a2a2a" stroke-width="1" marker-end="url(#arr)"/>
-
-      <!-- 3-Way Router (diamond shape) -->
-      <polygon points="700,600 780,626 700,652 620,626" fill="#0a0800" stroke="#2a2010" stroke-width="1"/>
-      <text x="700" y="622" text-anchor="middle" fill="#c4a35a" font-size="11">3-Way</text>
-      <text x="700" y="638" text-anchor="middle" fill="#c4a35a" font-size="11">Router</text>
-
-      <!-- phase label -->
-      <text x="22" y="630" text-anchor="middle" fill="#333" font-size="8" letter-spacing="1">STARTUP</text>
-
-      <!-- ══════════════════════════════════════════════════════
-           PHASE 6 — ROUTING (3 branches DOWN)
-      ══════════════════════════════════════════════════════ -->
-
-      <!-- vertical from router down -->
-      <line x1="700" y1="652" x2="700" y2="700" stroke="#1a1a1a" stroke-width="1"/>
-      <!-- horizontal splitter -->
-      <line x1="200" y1="700" x2="700" y2="700" stroke="#1a1a1a" stroke-width="1"/>
-
-      <!-- branch A vertical -->
-      <line x1="200" y1="700" x2="200" y2="740" stroke="#1a1a1a" stroke-width="1" marker-end="url(#arr)"/>
-      <!-- branch B vertical -->
-      <line x1="450" y1="700" x2="450" y2="740" stroke="#1a1a1a" stroke-width="1" marker-end="url(#arr)"/>
-      <!-- branch C vertical -->
-      <line x1="700" y1="700" x2="700" y2="740" stroke="#1a1a1a" stroke-width="1" marker-end="url(#arr)"/>
-
-      <!-- route labels -->
-      <text x="200" y="720" text-anchor="middle" fill="#444" font-size="9" letter-spacing="1">ID DETECTED</text>
-      <text x="450" y="720" text-anchor="middle" fill="#444" font-size="9" letter-spacing="1">AGGREGATE</text>
-      <text x="700" y="720" text-anchor="middle" fill="#444" font-size="9" letter-spacing="1">OTHER</text>
-
-      <!-- ── ROUTE A ── -->
-      <rect x="110" y="740" width="180" height="44" fill="#080808" stroke="#161616" stroke-width="1"/>
-      <text x="200" y="758" text-anchor="middle" fill="#555" font-size="11">Regex match</text>
-      <text x="200" y="773" text-anchor="middle" fill="#333" font-size="9">alphanumeric ID</text>
-
-      <line x1="200" y1="784" x2="200" y2="820" stroke="#161616" stroke-width="1" marker-end="url(#arr-branch)"/>
-
-      <rect x="110" y="820" width="180" height="44" fill="#080808" stroke="#161616" stroke-width="1"/>
-      <text x="200" y="838" text-anchor="middle" fill="#555" font-size="11">Direct DF scan</text>
-      <text x="200" y="853" text-anchor="middle" fill="#333" font-size="9">no embedding needed</text>
-
-      <!-- ── ROUTE B ── -->
-      <rect x="350" y="740" width="200" height="44" fill="#080808" stroke="#161616" stroke-width="1"/>
-      <text x="450" y="758" text-anchor="middle" fill="#555" font-size="11">Schema + prompt</text>
-      <text x="450" y="773" text-anchor="middle" fill="#333" font-size="9">full schema injected</text>
-
-      <line x1="450" y1="784" x2="450" y2="820" stroke="#161616" stroke-width="1" marker-end="url(#arr-branch)"/>
-
-      <rect x="350" y="820" width="200" height="44" fill="#080808" stroke="#161616" stroke-width="1"/>
-      <text x="450" y="838" text-anchor="middle" fill="#555" font-size="11">Codegen → exec</text>
-      <text x="450" y="853" text-anchor="middle" fill="#333" font-size="9">auto-retry on error</text>
-
-      <!-- ── ROUTE C ── -->
-      <rect x="600" y="740" width="200" height="44" fill="#080808" stroke="#161616" stroke-width="1"/>
-      <text x="700" y="758" text-anchor="middle" fill="#555" font-size="11">Embed query</text>
-      <text x="700" y="773" text-anchor="middle" fill="#333" font-size="9">all-MiniLM-L6-v2</text>
-
-      <line x1="700" y1="784" x2="700" y2="820" stroke="#161616" stroke-width="1" marker-end="url(#arr-branch)"/>
-
-      <rect x="600" y="820" width="200" height="44" fill="#080808" stroke="#161616" stroke-width="1"/>
-      <text x="700" y="838" text-anchor="middle" fill="#555" font-size="11">Cosine similarity</text>
-      <text x="700" y="853" text-anchor="middle" fill="#333" font-size="9">top 10 docs retrieved</text>
-
-      <!-- ── all 3 converge down to LLM ── -->
-      <line x1="200" y1="864" x2="200" y2="930" stroke="#161616" stroke-width="1"/>
-      <line x1="450" y1="864" x2="450" y2="930" stroke="#161616" stroke-width="1"/>
-      <line x1="700" y1="864" x2="700" y2="930" stroke="#161616" stroke-width="1"/>
-      <line x1="200" y1="930" x2="700" y2="930" stroke="#161616" stroke-width="1"/>
-      <line x1="450" y1="930" x2="450" y2="960" stroke="#1a1a1a" stroke-width="1" marker-end="url(#arr)"/>
-
-      <!-- LLM -->
-      <rect x="330" y="960" width="240" height="52" fill="#080808" stroke="#1e1e1e" stroke-width="1"/>
-      <text x="450" y="982" text-anchor="middle" fill="#ccc" font-size="12">Groq — Llama 3.1 8B</text>
-      <text x="450" y="999" text-anchor="middle" fill="#444" font-size="9">temperature 0 · sub-second inference</text>
-
-      <!-- arrow to Answer -->
-      <line x1="450" y1="1012" x2="450" y2="1050" stroke="#2a2a2a" stroke-width="1" marker-end="url(#arr)"/>
-
-      <!-- Answer -->
-      <rect x="330" y="1050" width="240" height="52" fill="#0d0d0d" stroke="#333" stroke-width="1.5"/>
-      <text x="450" y="1078" text-anchor="middle" fill="#fff" font-size="14" font-weight="400" letter-spacing="1">Answer</text>
-
-      <!-- phase label ROUTING -->
-      <text x="22" y="790" text-anchor="middle" fill="#333" font-size="8" letter-spacing="1">ROUTING</text>
-
-    </svg>
-    </div>
-    """, unsafe_allow_html=True)
+    st.image(_pipeline_chart(), use_container_width=True)
     
     st.markdown('<div style="height:24px;"></div>', unsafe_allow_html=True)
     st.markdown('<div style="font-family:IBM Plex Mono,monospace; font-size:10px; color:#444; letter-spacing:0.15em; text-transform:uppercase; margin-bottom:16px;">Loaded data</div>', unsafe_allow_html=True)
