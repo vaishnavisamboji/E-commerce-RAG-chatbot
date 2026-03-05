@@ -693,51 +693,7 @@ with tab5:
     """, unsafe_allow_html=True)
 
     # ============================================================
-    # CHART 1 & 2 (existing)
-    # ============================================================
-    # Compute monthly revenue
-    orders_df = dfs['orders']
-    payments_df = dfs['payments']
-    merged = pd.merge(orders_df, payments_df, on='order_id')
-    merged['order_purchase_timestamp'] = pd.to_datetime(merged['order_purchase_timestamp'])
-    merged['month'] = merged['order_purchase_timestamp'].dt.to_period('M').astype(str)
-    monthly_revenue = merged.groupby('month')['payment_value'].sum().reset_index()
-    monthly_revenue = monthly_revenue.sort_values('month')
-
-    # Compute average delivery days by state
-    orders = dfs['orders'].copy()
-    customers = dfs['customers']
-    orders['order_purchase_timestamp'] = pd.to_datetime(orders['order_purchase_timestamp'])
-    orders['order_delivered_customer_date'] = pd.to_datetime(orders['order_delivered_customer_date'])
-    orders['delivery_days'] = (orders['order_delivered_customer_date'] - orders['order_purchase_timestamp']).dt.days
-    delivery_merged = pd.merge(orders, customers, on='customer_id').dropna(subset=['delivery_days'])
-    state_delivery = delivery_merged.groupby('customer_state')['delivery_days'].mean().reset_index()
-    state_delivery = state_delivery.sort_values('delivery_days', ascending=False).head(10)
-
-    col1, col2 = st.columns(2)
-    with col1:
-        st.subheader("Total Revenue by Month")
-        st.line_chart(monthly_revenue.set_index('month'))
-    with col2:
-        st.subheader("Average Delivery Days by State (Top 10)")
-        st.bar_chart(state_delivery.set_index('customer_state'))
-
-    st.markdown("<hr style='margin: 40px 0; border-color: #1a1a1a;'>", unsafe_allow_html=True)
-
-    # ============================================================
-    # PRODUCT CATEGORY CHART (as requested)
-    # ============================================================
-    st.subheader("Product Category Distribution")
-    products_df = dfs['products']
-    cat_counts = products_df['product_category_name'].value_counts().reset_index()
-    cat_counts.columns = ['category', 'count']
-    cat_counts = cat_counts.head(15)  # top 15 for readability
-    st.bar_chart(cat_counts.set_index('category'))
-
-    st.markdown("<hr style='margin: 40px 0; border-color: #1a1a1a;'>", unsafe_allow_html=True)
-
-    # ============================================================
-    # ORDER STATUS LOOKUP
+    # ORDER STATUS LOOKUP (NOW AT THE TOP)
     # ============================================================
     st.subheader("Order Status Lookup")
 
@@ -778,7 +734,51 @@ with tab5:
     if st.session_state.lookup_result:
         st.markdown(st.session_state.lookup_result)
 
-    st.image('images/dashboard.png', use_container_width=True)
+    st.markdown("<hr style='margin: 40px 0; border-color: #1a1a1a;'>", unsafe_allow_html=True)
+
+    # ============================================================
+    # CHARTS (REVENUE & DELIVERY)
+    # ============================================================
+    # Compute monthly revenue
+    orders_df = dfs['orders']
+    payments_df = dfs['payments']
+    merged = pd.merge(orders_df, payments_df, on='order_id')
+    merged['order_purchase_timestamp'] = pd.to_datetime(merged['order_purchase_timestamp'])
+    merged['month'] = merged['order_purchase_timestamp'].dt.to_period('M').astype(str)
+    monthly_revenue = merged.groupby('month')['payment_value'].sum().reset_index()
+    monthly_revenue = monthly_revenue.sort_values('month')
+
+    # Compute average delivery days by state
+    orders = dfs['orders'].copy()
+    customers = dfs['customers']
+    orders['order_purchase_timestamp'] = pd.to_datetime(orders['order_purchase_timestamp'])
+    orders['order_delivered_customer_date'] = pd.to_datetime(orders['order_delivered_customer_date'])
+    orders['delivery_days'] = (orders['order_delivered_customer_date'] - orders['order_purchase_timestamp']).dt.days
+    delivery_merged = pd.merge(orders, customers, on='customer_id').dropna(subset=['delivery_days'])
+    state_delivery = delivery_merged.groupby('customer_state')['delivery_days'].mean().reset_index()
+    state_delivery = state_delivery.sort_values('delivery_days', ascending=False).head(10)
+
+    col1, col2 = st.columns(2)
+    with col1:
+        st.subheader("Total Revenue by Month")
+        st.line_chart(monthly_revenue.set_index('month'))
+    with col2:
+        st.subheader("Average Delivery Days by State (Top 10)")
+        st.bar_chart(state_delivery.set_index('customer_state'))
+
+    st.markdown("<hr style='margin: 40px 0; border-color: #1a1a1a;'>", unsafe_allow_html=True)
+
+    # ============================================================
+    # PRODUCT CATEGORY CHART
+    # ============================================================
+    st.subheader("Product Category Distribution")
+    products_df = dfs['products']
+    cat_counts = products_df['product_category_name'].value_counts().reset_index()
+    cat_counts.columns = ['category', 'count']
+    cat_counts = cat_counts.head(15)  # top 15 for readability
+    st.bar_chart(cat_counts.set_index('category'))
+
+    # st.image('images/dashboard.png', use_container_width=True)
 
     st.markdown("""
     <p style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #333333;
