@@ -653,7 +653,7 @@ with tab5:
     </p>
     """, unsafe_allow_html=True)
 
-    st.image('/kaggle/working/dashboard.png', use_container_width=True)
+    st.image('images/dashboard.png', use_container_width=True)
 
     st.markdown("""
     <p style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #333333;
