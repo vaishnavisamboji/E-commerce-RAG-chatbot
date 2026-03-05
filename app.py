@@ -628,151 +628,268 @@ with tab3:
         </div>
     </div>
     """, unsafe_allow_html=True)
+
+    # flowchart
     st.markdown("""
-    <div style="font-family:IBM Plex Mono,monospace; font-size:10px; color:#444; letter-spacing:0.15em; text-transform:uppercase; margin-bottom:16px; margin-top:8px;">Full Pipeline</div>
-
+    <div style="font-family:IBM Plex Mono,monospace; font-size:10px; color:#444; letter-spacing:0.15em; text-transform:uppercase; margin:8px 0 16px 0;">Full Pipeline</div>
     <div style="border:1px solid #1a1a1a; padding:32px; overflow-x:auto;">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1200" style="width:100%; max-width:900px; display:block; margin:0 auto; font-family:'IBM Plex Mono',monospace;">
 
-      <!-- PHASE 1 — INGESTION -->
-      <div style="display:flex; align-items:center; gap:0; margin-bottom:4px;">
-        <div style="font-family:IBM Plex Mono,monospace; font-size:9px; color:#333; text-transform:uppercase; letter-spacing:0.12em; width:100px; text-align:right; padding-right:16px; flex-shrink:0;">Ingestion</div>
-        <div style="background:#080808; border:1px solid #1e1e1e; padding:10px 14px; font-size:12px; color:#ccc; white-space:nowrap;">Raw Olist CSVs<div style="font-size:9px; color:#444; margin-top:3px;">orders · customers · products · reviews · payments · sellers</div></div>
-        <div style="color:#2a2a2a; padding:0 8px; font-size:13px; flex-shrink:0;">&#8594;</div>
-        <div style="background:#05080d; border:1px solid #1a2a3a; padding:10px 14px; font-size:12px; color:#6aadcf; white-space:nowrap;">AWS S3<div style="font-size:9px; color:#2a4a5a; margin-top:3px;">brazilian-ecommerce-vs · us-west-1</div></div>
-      </div>
+      <!-- ─── DEFS ─── -->
+      <defs>
+        <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L8,3 z" fill="#2a2a2a"/>
+        </marker>
+        <marker id="arr-branch" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L8,3 z" fill="#1e1e1e"/>
+        </marker>
+      </defs>
 
-      <!-- connector -->
-      <div style="display:flex; margin-bottom:4px;">
-        <div style="width:100px; flex-shrink:0;"></div>
-        <div style="width:16px; border-left:1px solid #1a1a1a; margin-left:0; height:20px;"></div>
-      </div>
+      <!-- ══════════════════════════════════════════════════════
+           PHASE 1 — INGESTION
+      ══════════════════════════════════════════════════════ -->
 
-      <!-- PHASE 2 — PROCESSING -->
-      <div style="display:flex; align-items:center; gap:0; margin-bottom:4px;">
-        <div style="font-family:IBM Plex Mono,monospace; font-size:9px; color:#333; text-transform:uppercase; letter-spacing:0.12em; width:100px; text-align:right; padding-right:16px; flex-shrink:0;">Processing</div>
-        <div style="background:#05080d; border:1px solid #1a2a3a; padding:10px 14px; font-size:12px; color:#6aadcf; white-space:nowrap;">AWS S3</div>
-        <div style="color:#2a2a2a; padding:0 8px; font-size:13px; flex-shrink:0;">&#8594;</div>
-        <div style="background:#080808; border:1px solid #1e1e1e; padding:10px 14px; font-size:12px; color:#ccc; white-space:nowrap;">Jupyter Notebook<div style="font-size:9px; color:#444; margin-top:3px;">s3fs · pandas</div></div>
-        <div style="color:#2a2a2a; padding:0 8px; font-size:13px; flex-shrink:0;">&#8594;</div>
-        <div style="background:#080808; border:1px solid #1e1e1e; padding:10px 14px; font-size:12px; color:#ccc; white-space:nowrap;">Clean + Feature Engineer<div style="font-size:9px; color:#444; margin-top:3px;">delivery_days · is_late · total_revenue</div></div>
-        <div style="color:#2a2a2a; padding:0 8px; font-size:13px; flex-shrink:0;">&#8594;</div>
-        <div style="background:#05080d; border:1px solid #1a2a3a; padding:10px 14px; font-size:12px; color:#6aadcf; white-space:nowrap;">S3 (processed CSVs)<div style="font-size:9px; color:#2a4a5a; margin-top:3px;">6 cleaned tables</div></div>
-      </div>
+      <!-- Raw CSVs -->
+      <rect x="60" y="30" width="200" height="56" fill="#0a0a0a" stroke="#222" stroke-width="1"/>
+      <text x="160" y="53" text-anchor="middle" fill="#ccc" font-size="12">Raw Olist CSVs</text>
+      <text x="160" y="70" text-anchor="middle" fill="#444" font-size="9">orders · customers · products</text>
+      <text x="160" y="82" text-anchor="middle" fill="#444" font-size="9">reviews · payments · sellers</text>
 
-      <!-- connector -->
-      <div style="display:flex; margin-bottom:4px;">
-        <div style="width:100px; flex-shrink:0;"></div>
-        <div style="width:16px; border-left:1px solid #1a1a1a; margin-left:0; height:20px;"></div>
-      </div>
+      <!-- arrow -->
+      <line x1="260" y1="58" x2="330" y2="58" stroke="#2a2a2a" stroke-width="1" marker-end="url(#arr)"/>
 
-      <!-- PHASE 3 — SQL ANALYTICS -->
-      <div style="display:flex; align-items:center; gap:0; margin-bottom:4px;">
-        <div style="font-family:IBM Plex Mono,monospace; font-size:9px; color:#333; text-transform:uppercase; letter-spacing:0.12em; width:100px; text-align:right; padding-right:16px; flex-shrink:0;">SQL Analytics</div>
-        <div style="background:#05080d; border:1px solid #1a2a3a; padding:10px 14px; font-size:12px; color:#6aadcf; white-space:nowrap;">S3 (processed)</div>
-        <div style="color:#2a2a2a; padding:0 8px; font-size:13px; flex-shrink:0;">&#8594;</div>
-        <div style="background:#080808; border:1px solid #1e1e1e; padding:10px 14px; font-size:12px; color:#ccc; white-space:nowrap;">AWS RDS MySQL<div style="font-size:9px; color:#444; margin-top:3px;">SQLAlchemy · 6 tables loaded</div></div>
-        <div style="color:#2a2a2a; padding:0 8px; font-size:13px; flex-shrink:0;">&#8594;</div>
-        <div style="background:#080808; border:1px solid #1e1e1e; padding:10px 14px; font-size:12px; color:#ccc; white-space:nowrap;">SQL Queries<div style="font-size:9px; color:#444; margin-top:3px;">monthly · segments · delivery · payments · products</div></div>
-        <div style="color:#2a2a2a; padding:0 8px; font-size:13px; flex-shrink:0;">&#8594;</div>
-        <div style="background:#080808; border:1px solid #1e1e1e; padding:10px 14px; font-size:12px; color:#ccc; white-space:nowrap;">5 Summary Tables<div style="font-size:9px; color:#444; margin-top:3px;">saved back to MySQL</div></div>
-        <div style="color:#2a2a2a; padding:0 8px; font-size:13px; flex-shrink:0;">&#8594;</div>
-        <div style="background:#060d06; border:1px solid #1f3a1f; padding:10px 14px; font-size:12px; color:#6dbf6d; white-space:nowrap;">Power BI Dashboard<div style="font-size:9px; color:#2a5a2a; margin-top:3px;">MySQL connector</div></div>
-      </div>
+      <!-- AWS S3 (raw) -->
+      <rect x="330" y="30" width="160" height="56" fill="#05080d" stroke="#1a2a3a" stroke-width="1"/>
+      <text x="410" y="53" text-anchor="middle" fill="#6aadcf" font-size="12">AWS S3</text>
+      <text x="410" y="70" text-anchor="middle" fill="#2a4a5a" font-size="9">brazilian-ecommerce-vs</text>
+      <text x="410" y="82" text-anchor="middle" fill="#2a4a5a" font-size="9">us-west-1</text>
 
-      <!-- connector -->
-      <div style="display:flex; margin-bottom:4px;">
-        <div style="width:100px; flex-shrink:0;"></div>
-        <div style="width:16px; border-left:1px solid #1a1a1a; margin-left:0; height:20px;"></div>
-      </div>
+      <!-- phase label -->
+      <text x="22" y="62" text-anchor="middle" fill="#333" font-size="8" letter-spacing="1">INGEST</text>
 
-      <!-- PHASE 4 — EMBEDDING -->
-      <div style="display:flex; align-items:center; gap:0; margin-bottom:4px;">
-        <div style="font-family:IBM Plex Mono,monospace; font-size:9px; color:#333; text-transform:uppercase; letter-spacing:0.12em; width:100px; text-align:right; padding-right:16px; flex-shrink:0;">Embedding</div>
-        <div style="background:#05080d; border:1px solid #1a2a3a; padding:10px 14px; font-size:12px; color:#6aadcf; white-space:nowrap;">S3 (processed)</div>
-        <div style="color:#2a2a2a; padding:0 8px; font-size:13px; flex-shrink:0;">&#8594;</div>
-        <div style="background:#080808; border:1px solid #1e1e1e; padding:10px 14px; font-size:12px; color:#ccc; white-space:nowrap;">Kaggle T4 GPU<div style="font-size:9px; color:#444; margin-top:3px;">438,038 LangChain Documents</div></div>
-        <div style="color:#2a2a2a; padding:0 8px; font-size:13px; flex-shrink:0;">&#8594;</div>
-        <div style="background:#080808; border:1px solid #1e1e1e; padding:10px 14px; font-size:12px; color:#ccc; white-space:nowrap;">all-MiniLM-L6-v2<div style="font-size:9px; color:#444; margin-top:3px;">HuggingFace · normalize embeddings</div></div>
-        <div style="color:#2a2a2a; padding:0 8px; font-size:13px; flex-shrink:0;">&#8594;</div>
-        <div style="background:#05080d; border:1px solid #1a2a3a; padding:10px 14px; font-size:12px; color:#6aadcf; white-space:nowrap;">embeddings.npy + documents.pkl<div style="font-size:9px; color:#2a4a5a; margin-top:3px;">uploaded to S3</div></div>
-      </div>
+      <!-- ── vertical connector ── -->
+      <line x1="410" y1="86" x2="410" y2="126" stroke="#1a1a1a" stroke-width="1" marker-end="url(#arr)"/>
 
-      <!-- connector -->
-      <div style="display:flex; margin-bottom:4px;">
-        <div style="width:100px; flex-shrink:0;"></div>
-        <div style="width:16px; border-left:1px solid #1a1a1a; margin-left:0; height:20px;"></div>
-      </div>
+      <!-- ══════════════════════════════════════════════════════
+           PHASE 2 — PROCESSING
+      ══════════════════════════════════════════════════════ -->
 
-      <!-- PHASE 5 — APP STARTUP -->
-      <div style="display:flex; align-items:center; gap:0; margin-bottom:4px;">
-        <div style="font-family:IBM Plex Mono,monospace; font-size:9px; color:#333; text-transform:uppercase; letter-spacing:0.12em; width:100px; text-align:right; padding-right:16px; flex-shrink:0;">App Startup</div>
-        <div style="background:#05080d; border:1px solid #1a2a3a; padding:10px 14px; font-size:12px; color:#6aadcf; white-space:nowrap;">S3 cold-start download<div style="font-size:9px; color:#2a4a5a; margin-top:3px;">embeddings.npy · documents.pkl · 6 CSVs</div></div>
-        <div style="color:#2a2a2a; padding:0 8px; font-size:13px; flex-shrink:0;">&#8594;</div>
-        <div style="background:#080808; border:1px solid #1e1e1e; padding:10px 14px; font-size:12px; color:#fff; white-space:nowrap;">User Question</div>
-        <div style="color:#2a2a2a; padding:0 8px; font-size:13px; flex-shrink:0;">&#8594;</div>
-        <div style="background:#0a0800; border:1px solid #2a2010; padding:10px 14px; font-size:12px; color:#c4a35a; white-space:nowrap;">3-Way Router<div style="font-size:9px; color:#5a4a20; margin-top:3px;">LangChain LCEL</div></div>
-      </div>
+      <!-- Jupyter -->
+      <rect x="270" y="126" width="140" height="52" fill="#0a0a0a" stroke="#222" stroke-width="1"/>
+      <text x="340" y="148" text-anchor="middle" fill="#ccc" font-size="12">Jupyter Notebook</text>
+      <text x="340" y="165" text-anchor="middle" fill="#444" font-size="9">s3fs · pandas · boto3</text>
 
-      <!-- connector -->
-      <div style="display:flex; margin-bottom:4px;">
-        <div style="width:100px; flex-shrink:0;"></div>
-        <div style="width:16px; border-left:1px solid #1a1a1a; margin-left:0; height:20px;"></div>
-      </div>
+      <!-- arrow from S3 to Jupyter -->
+      <line x1="410" y1="126" x2="410" y2="152" stroke="#1a1a1a" stroke-width="1"/>
+      <line x1="340" y1="152" x2="410" y2="152" stroke="#1a1a1a" stroke-width="1" marker-end="url(#arr)"/>
+      <line x1="340" y1="152" x2="340" y2="126" stroke="#1a1a1a" stroke-width="1" marker-end="url(#arr)"/>
 
-      <!-- PHASE 6 — ROUTING (3 branches) -->
-      <div style="display:flex; align-items:flex-start; gap:0;">
-        <div style="font-family:IBM Plex Mono,monospace; font-size:9px; color:#333; text-transform:uppercase; letter-spacing:0.12em; width:100px; text-align:right; padding-right:16px; flex-shrink:0; padding-top:14px;">Routing</div>
-        <div style="border-left:1px solid #1a1a1a; padding-left:0; display:flex; flex-direction:column; gap:8px;">
+      <!-- arrow -->
+      <line x1="410" y1="152" x2="490" y2="152" stroke="#2a2a2a" stroke-width="1" marker-end="url(#arr)"/>
 
-          <!-- Route A -->
-          <div style="display:flex; align-items:center; gap:0;">
-            <div style="width:20px; height:1px; background:#1a1a1a; flex-shrink:0;"></div>
-            <div style="font-family:IBM Plex Mono,monospace; font-size:9px; color:#333; text-transform:uppercase; letter-spacing:0.1em; padding:4px 8px; border:1px solid #151515; background:#050505; white-space:nowrap; margin-right:8px;">ID Detected</div>
-            <div style="color:#2a2a2a; padding:0 8px; font-size:13px; flex-shrink:0;">&#8594;</div>
-            <div style="background:#080808; border:1px solid #161616; padding:8px 12px; font-size:11px; color:#555; white-space:nowrap;">Regex match</div>
-            <div style="color:#222; padding:0 8px; font-size:13px; flex-shrink:0;">&#8594;</div>
-            <div style="background:#080808; border:1px solid #161616; padding:8px 12px; font-size:11px; color:#555; white-space:nowrap;">Direct dataframe scan</div>
-            <div style="color:#222; padding:0 8px; font-size:13px; flex-shrink:0;">&#8594;</div>
-            <div style="background:#080808; border:1px solid #161616; padding:8px 12px; font-size:11px; color:#555; white-space:nowrap;">Groq · Llama 3.1 8B</div>
-            <div style="color:#222; padding:0 8px; font-size:13px; flex-shrink:0;">&#8594;</div>
-            <div style="background:#0a0a0a; border:1px solid #222; padding:8px 14px; font-size:12px; color:#fff; white-space:nowrap;">Answer</div>
-          </div>
+      <!-- Clean + FE -->
+      <rect x="490" y="126" width="180" height="52" fill="#0a0a0a" stroke="#222" stroke-width="1"/>
+      <text x="580" y="148" text-anchor="middle" fill="#ccc" font-size="12">Clean + Feature Eng.</text>
+      <text x="580" y="165" text-anchor="middle" fill="#444" font-size="9">delivery_days · is_late · total_revenue</text>
 
-          <!-- Route B -->
-          <div style="display:flex; align-items:center; gap:0;">
-            <div style="width:20px; height:1px; background:#1a1a1a; flex-shrink:0;"></div>
-            <div style="font-family:IBM Plex Mono,monospace; font-size:9px; color:#333; text-transform:uppercase; letter-spacing:0.1em; padding:4px 8px; border:1px solid #151515; background:#050505; white-space:nowrap; margin-right:8px;">Aggregate</div>
-            <div style="color:#2a2a2a; padding:0 8px; font-size:13px; flex-shrink:0;">&#8594;</div>
-            <div style="background:#080808; border:1px solid #161616; padding:8px 12px; font-size:11px; color:#555; white-space:nowrap;">Schema + prompt</div>
-            <div style="color:#222; padding:0 8px; font-size:13px; flex-shrink:0;">&#8594;</div>
-            <div style="background:#080808; border:1px solid #161616; padding:8px 12px; font-size:11px; color:#555; white-space:nowrap;">Codegen &#8594; exec</div>
-            <div style="color:#222; padding:0 8px; font-size:13px; flex-shrink:0;">&#8594;</div>
-            <div style="background:#080808; border:1px solid #161616; padding:8px 12px; font-size:11px; color:#555; white-space:nowrap;">Auto-retry on error</div>
-            <div style="color:#222; padding:0 8px; font-size:13px; flex-shrink:0;">&#8594;</div>
-            <div style="background:#080808; border:1px solid #161616; padding:8px 12px; font-size:11px; color:#555; white-space:nowrap;">Groq · Llama 3.1 8B</div>
-            <div style="color:#222; padding:0 8px; font-size:13px; flex-shrink:0;">&#8594;</div>
-            <div style="background:#0a0a0a; border:1px solid #222; padding:8px 14px; font-size:12px; color:#fff; white-space:nowrap;">Answer</div>
-          </div>
+      <!-- arrow -->
+      <line x1="670" y1="152" x2="750" y2="152" stroke="#2a2a2a" stroke-width="1" marker-end="url(#arr)"/>
 
-          <!-- Route C -->
-          <div style="display:flex; align-items:center; gap:0;">
-            <div style="width:20px; height:1px; background:#1a1a1a; flex-shrink:0;"></div>
-            <div style="font-family:IBM Plex Mono,monospace; font-size:9px; color:#333; text-transform:uppercase; letter-spacing:0.1em; padding:4px 8px; border:1px solid #151515; background:#050505; white-space:nowrap; margin-right:8px;">RAG</div>
-            <div style="color:#2a2a2a; padding:0 8px; font-size:13px; flex-shrink:0;">&#8594;</div>
-            <div style="background:#080808; border:1px solid #161616; padding:8px 12px; font-size:11px; color:#555; white-space:nowrap;">Embed query</div>
-            <div style="color:#222; padding:0 8px; font-size:13px; flex-shrink:0;">&#8594;</div>
-            <div style="background:#080808; border:1px solid #161616; padding:8px 12px; font-size:11px; color:#555; white-space:nowrap;">Cosine similarity</div>
-            <div style="color:#222; padding:0 8px; font-size:13px; flex-shrink:0;">&#8594;</div>
-            <div style="background:#080808; border:1px solid #161616; padding:8px 12px; font-size:11px; color:#555; white-space:nowrap;">Top 10 docs</div>
-            <div style="color:#222; padding:0 8px; font-size:13px; flex-shrink:0;">&#8594;</div>
-            <div style="background:#080808; border:1px solid #161616; padding:8px 12px; font-size:11px; color:#555; white-space:nowrap;">Groq · Llama 3.1 8B</div>
-            <div style="color:#222; padding:0 8px; font-size:13px; flex-shrink:0;">&#8594;</div>
-            <div style="background:#0a0a0a; border:1px solid #222; padding:8px 14px; font-size:12px; color:#fff; white-space:nowrap;">Answer</div>
-          </div>
+      <!-- S3 processed -->
+      <rect x="750" y="126" width="130" height="52" fill="#05080d" stroke="#1a2a3a" stroke-width="1"/>
+      <text x="815" y="148" text-anchor="middle" fill="#6aadcf" font-size="12">S3 (processed)</text>
+      <text x="815" y="165" text-anchor="middle" fill="#2a4a5a" font-size="9">6 cleaned CSVs</text>
 
-        </div>
-      </div>
+      <!-- phase label -->
+      <text x="22" y="156" text-anchor="middle" fill="#333" font-size="8" letter-spacing="1">PROCESS</text>
 
+      <!-- ── S3 branches DOWN into phase 3 and phase 4 ── -->
+      <!-- vertical from S3 processed down -->
+      <line x1="815" y1="178" x2="815" y2="230" stroke="#1a1a1a" stroke-width="1"/>
+      <!-- horizontal split -->
+      <line x1="450" y1="230" x2="815" y2="230" stroke="#1a1a1a" stroke-width="1"/>
+      <!-- down to SQL Analytics -->
+      <line x1="450" y1="230" x2="450" y2="268" stroke="#1a1a1a" stroke-width="1" marker-end="url(#arr)"/>
+      <!-- down to Embedding -->
+      <line x1="815" y1="230" x2="815" y2="490" stroke="#1a1a1a" stroke-width="1" marker-end="url(#arr)"/>
+
+      <!-- ══════════════════════════════════════════════════════
+           PHASE 3 — SQL ANALYTICS
+      ══════════════════════════════════════════════════════ -->
+
+      <!-- RDS MySQL -->
+      <rect x="330" y="268" width="160" height="52" fill="#0a0a0a" stroke="#222" stroke-width="1"/>
+      <text x="410" y="290" text-anchor="middle" fill="#ccc" font-size="12">AWS RDS MySQL</text>
+      <text x="410" y="307" text-anchor="middle" fill="#444" font-size="9">SQLAlchemy · 6 tables</text>
+
+      <line x1="450" y1="268" x2="450" y2="294" stroke="#1a1a1a" stroke-width="1"/>
+      <line x1="410" y1="294" x2="450" y2="294" stroke="#1a1a1a" stroke-width="1" marker-end="url(#arr)"/>
+      <line x1="410" y1="294" x2="410" y2="268" stroke="#1a1a1a" stroke-width="1" marker-end="url(#arr)"/>
+
+      <!-- arrow -->
+      <line x1="490" y1="294" x2="560" y2="294" stroke="#2a2a2a" stroke-width="1" marker-end="url(#arr)"/>
+
+      <!-- SQL Queries -->
+      <rect x="560" y="268" width="160" height="52" fill="#0a0a0a" stroke="#222" stroke-width="1"/>
+      <text x="640" y="290" text-anchor="middle" fill="#ccc" font-size="12">SQL Queries</text>
+      <text x="640" y="307" text-anchor="middle" fill="#444" font-size="9">monthly · segments · delivery</text>
+
+      <!-- arrow down to summary tables -->
+      <line x1="640" y1="320" x2="640" y2="358" stroke="#2a2a2a" stroke-width="1" marker-end="url(#arr)"/>
+
+      <!-- 5 Summary Tables -->
+      <rect x="560" y="358" width="160" height="52" fill="#0a0a0a" stroke="#222" stroke-width="1"/>
+      <text x="640" y="380" text-anchor="middle" fill="#ccc" font-size="12">5 Summary Tables</text>
+      <text x="640" y="397" text-anchor="middle" fill="#444" font-size="9">saved back to MySQL</text>
+
+      <!-- arrow to Power BI -->
+      <line x1="720" y1="384" x2="760" y2="384" stroke="#2a2a2a" stroke-width="1" marker-end="url(#arr)"/>
+
+      <!-- Power BI -->
+      <rect x="760" y="358" width="120" height="52" fill="#060d06" stroke="#1f3a1f" stroke-width="1"/>
+      <text x="820" y="380" text-anchor="middle" fill="#6dbf6d" font-size="12">Power BI</text>
+      <text x="820" y="397" text-anchor="middle" fill="#2a5a2a" font-size="9">MySQL connector</text>
+
+      <!-- phase label -->
+      <text x="22" y="300" text-anchor="middle" fill="#333" font-size="8" letter-spacing="1">SQL</text>
+      <text x="22" y="312" text-anchor="middle" fill="#333" font-size="8" letter-spacing="1">ANALYTICS</text>
+
+      <!-- ══════════════════════════════════════════════════════
+           PHASE 4 — EMBEDDING
+      ══════════════════════════════════════════════════════ -->
+
+      <!-- Kaggle T4 GPU -->
+      <rect x="695" y="490" width="155" height="52" fill="#0a0a0a" stroke="#222" stroke-width="1"/>
+      <text x="772" y="512" text-anchor="middle" fill="#ccc" font-size="12">Kaggle T4 GPU</text>
+      <text x="772" y="529" text-anchor="middle" fill="#444" font-size="9">438,038 LangChain Docs</text>
+
+      <!-- arrow -->
+      <line x1="695" y1="516" x2="610" y2="516" stroke="#2a2a2a" stroke-width="1" marker-end="url(#arr)"/>
+
+      <!-- all-MiniLM -->
+      <rect x="440" y="490" width="170" height="52" fill="#0a0a0a" stroke="#222" stroke-width="1"/>
+      <text x="525" y="512" text-anchor="middle" fill="#ccc" font-size="12">all-MiniLM-L6-v2</text>
+      <text x="525" y="529" text-anchor="middle" fill="#444" font-size="9">HuggingFace · normalize</text>
+
+      <!-- arrow -->
+      <line x1="440" y1="516" x2="360" y2="516" stroke="#2a2a2a" stroke-width="1" marker-end="url(#arr)"/>
+
+      <!-- embeddings S3 -->
+      <rect x="180" y="490" width="180" height="52" fill="#05080d" stroke="#1a2a3a" stroke-width="1"/>
+      <text x="270" y="512" text-anchor="middle" fill="#6aadcf" font-size="12">embeddings.npy</text>
+      <text x="270" y="529" text-anchor="middle" fill="#2a4a5a" font-size="9">+ documents.pkl → S3</text>
+
+      <!-- phase label -->
+      <text x="22" y="520" text-anchor="middle" fill="#333" font-size="8" letter-spacing="1">EMBED</text>
+
+      <!-- ── connector down ── -->
+      <line x1="270" y1="542" x2="270" y2="600" stroke="#1a1a1a" stroke-width="1" marker-end="url(#arr)"/>
+
+      <!-- ══════════════════════════════════════════════════════
+           PHASE 5 — APP STARTUP
+      ══════════════════════════════════════════════════════ -->
+
+      <!-- S3 cold start -->
+      <rect x="160" y="600" width="200" height="52" fill="#05080d" stroke="#1a2a3a" stroke-width="1"/>
+      <text x="260" y="622" text-anchor="middle" fill="#6aadcf" font-size="12">S3 cold-start download</text>
+      <text x="260" y="639" text-anchor="middle" fill="#2a4a5a" font-size="9">embeddings.npy · docs.pkl · 6 CSVs</text>
+
+      <!-- arrow -->
+      <line x1="360" y1="626" x2="420" y2="626" stroke="#2a2a2a" stroke-width="1" marker-end="url(#arr)"/>
+
+      <!-- User Question -->
+      <rect x="420" y="600" width="140" height="52" fill="#0d0d0d" stroke="#2a2a2a" stroke-width="1"/>
+      <text x="490" y="622" text-anchor="middle" fill="#fff" font-size="12">User Question</text>
+      <text x="490" y="639" text-anchor="middle" fill="#555" font-size="9">plain English</text>
+
+      <!-- arrow -->
+      <line x1="560" y1="626" x2="620" y2="626" stroke="#2a2a2a" stroke-width="1" marker-end="url(#arr)"/>
+
+      <!-- 3-Way Router (diamond shape) -->
+      <polygon points="700,600 780,626 700,652 620,626" fill="#0a0800" stroke="#2a2010" stroke-width="1"/>
+      <text x="700" y="622" text-anchor="middle" fill="#c4a35a" font-size="11">3-Way</text>
+      <text x="700" y="638" text-anchor="middle" fill="#c4a35a" font-size="11">Router</text>
+
+      <!-- phase label -->
+      <text x="22" y="630" text-anchor="middle" fill="#333" font-size="8" letter-spacing="1">STARTUP</text>
+
+      <!-- ══════════════════════════════════════════════════════
+           PHASE 6 — ROUTING (3 branches DOWN)
+      ══════════════════════════════════════════════════════ -->
+
+      <!-- vertical from router down -->
+      <line x1="700" y1="652" x2="700" y2="700" stroke="#1a1a1a" stroke-width="1"/>
+      <!-- horizontal splitter -->
+      <line x1="200" y1="700" x2="700" y2="700" stroke="#1a1a1a" stroke-width="1"/>
+
+      <!-- branch A vertical -->
+      <line x1="200" y1="700" x2="200" y2="740" stroke="#1a1a1a" stroke-width="1" marker-end="url(#arr)"/>
+      <!-- branch B vertical -->
+      <line x1="450" y1="700" x2="450" y2="740" stroke="#1a1a1a" stroke-width="1" marker-end="url(#arr)"/>
+      <!-- branch C vertical -->
+      <line x1="700" y1="700" x2="700" y2="740" stroke="#1a1a1a" stroke-width="1" marker-end="url(#arr)"/>
+
+      <!-- route labels -->
+      <text x="200" y="720" text-anchor="middle" fill="#444" font-size="9" letter-spacing="1">ID DETECTED</text>
+      <text x="450" y="720" text-anchor="middle" fill="#444" font-size="9" letter-spacing="1">AGGREGATE</text>
+      <text x="700" y="720" text-anchor="middle" fill="#444" font-size="9" letter-spacing="1">OTHER</text>
+
+      <!-- ── ROUTE A ── -->
+      <rect x="110" y="740" width="180" height="44" fill="#080808" stroke="#161616" stroke-width="1"/>
+      <text x="200" y="758" text-anchor="middle" fill="#555" font-size="11">Regex match</text>
+      <text x="200" y="773" text-anchor="middle" fill="#333" font-size="9">alphanumeric ID</text>
+
+      <line x1="200" y1="784" x2="200" y2="820" stroke="#161616" stroke-width="1" marker-end="url(#arr-branch)"/>
+
+      <rect x="110" y="820" width="180" height="44" fill="#080808" stroke="#161616" stroke-width="1"/>
+      <text x="200" y="838" text-anchor="middle" fill="#555" font-size="11">Direct DF scan</text>
+      <text x="200" y="853" text-anchor="middle" fill="#333" font-size="9">no embedding needed</text>
+
+      <!-- ── ROUTE B ── -->
+      <rect x="350" y="740" width="200" height="44" fill="#080808" stroke="#161616" stroke-width="1"/>
+      <text x="450" y="758" text-anchor="middle" fill="#555" font-size="11">Schema + prompt</text>
+      <text x="450" y="773" text-anchor="middle" fill="#333" font-size="9">full schema injected</text>
+
+      <line x1="450" y1="784" x2="450" y2="820" stroke="#161616" stroke-width="1" marker-end="url(#arr-branch)"/>
+
+      <rect x="350" y="820" width="200" height="44" fill="#080808" stroke="#161616" stroke-width="1"/>
+      <text x="450" y="838" text-anchor="middle" fill="#555" font-size="11">Codegen → exec</text>
+      <text x="450" y="853" text-anchor="middle" fill="#333" font-size="9">auto-retry on error</text>
+
+      <!-- ── ROUTE C ── -->
+      <rect x="600" y="740" width="200" height="44" fill="#080808" stroke="#161616" stroke-width="1"/>
+      <text x="700" y="758" text-anchor="middle" fill="#555" font-size="11">Embed query</text>
+      <text x="700" y="773" text-anchor="middle" fill="#333" font-size="9">all-MiniLM-L6-v2</text>
+
+      <line x1="700" y1="784" x2="700" y2="820" stroke="#161616" stroke-width="1" marker-end="url(#arr-branch)"/>
+
+      <rect x="600" y="820" width="200" height="44" fill="#080808" stroke="#161616" stroke-width="1"/>
+      <text x="700" y="838" text-anchor="middle" fill="#555" font-size="11">Cosine similarity</text>
+      <text x="700" y="853" text-anchor="middle" fill="#333" font-size="9">top 10 docs retrieved</text>
+
+      <!-- ── all 3 converge down to LLM ── -->
+      <line x1="200" y1="864" x2="200" y2="930" stroke="#161616" stroke-width="1"/>
+      <line x1="450" y1="864" x2="450" y2="930" stroke="#161616" stroke-width="1"/>
+      <line x1="700" y1="864" x2="700" y2="930" stroke="#161616" stroke-width="1"/>
+      <line x1="200" y1="930" x2="700" y2="930" stroke="#161616" stroke-width="1"/>
+      <line x1="450" y1="930" x2="450" y2="960" stroke="#1a1a1a" stroke-width="1" marker-end="url(#arr)"/>
+
+      <!-- LLM -->
+      <rect x="330" y="960" width="240" height="52" fill="#080808" stroke="#1e1e1e" stroke-width="1"/>
+      <text x="450" y="982" text-anchor="middle" fill="#ccc" font-size="12">Groq — Llama 3.1 8B</text>
+      <text x="450" y="999" text-anchor="middle" fill="#444" font-size="9">temperature 0 · sub-second inference</text>
+
+      <!-- arrow to Answer -->
+      <line x1="450" y1="1012" x2="450" y2="1050" stroke="#2a2a2a" stroke-width="1" marker-end="url(#arr)"/>
+
+      <!-- Answer -->
+      <rect x="330" y="1050" width="240" height="52" fill="#0d0d0d" stroke="#333" stroke-width="1.5"/>
+      <text x="450" y="1078" text-anchor="middle" fill="#fff" font-size="14" font-weight="400" letter-spacing="1">Answer</text>
+
+      <!-- phase label ROUTING -->
+      <text x="22" y="790" text-anchor="middle" fill="#333" font-size="8" letter-spacing="1">ROUTING</text>
+
+    </svg>
     </div>
     """, unsafe_allow_html=True)
     
