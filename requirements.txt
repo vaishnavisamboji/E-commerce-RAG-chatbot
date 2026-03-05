@@ -5,5 +5,6 @@ langchain-community
 pandas
 boto3
 numpy
+matplotlib
 python-dotenv
 sentence-transformers
